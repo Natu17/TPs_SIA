@@ -2,7 +2,7 @@ from ctypes import sizeof
 import random
 from shutil import move
 solved = 'wwwwbbbbooooggggrrrryyyy'
-MAX_DEPTH = 11
+MAX_DEPTH = 13
 
 #Front rotation
 def F(state):
@@ -11,7 +11,7 @@ def F(state):
     state[3]+state[0]+state[10]+state[11]+
     state[12]+state[13]+state[14]+state[15]+
     state[16]+state[17]+state[21]+state[22]+
-    state[20]+state[9]+state[9]+state[23])
+    state[20]+state[8]+state[9]+state[23])
 
 # Front' rotation
 def Fc(state):
@@ -69,7 +69,7 @@ def check(state):
 
 
 #scrumble for starting position
-def scrumble():
+def scramble():
     state = solved
     moves = ''
     rand = 0
@@ -78,5 +78,15 @@ def scrumble():
         state = actions[rand](state)
         moves += actionsName[rand] + ' '
         #print(state)
-    #print(moves)
+    print(moves)
     return state
+
+def whatAction(previous, now):
+    solved = 1
+    i = 0
+    while (solved and i < len(actions)):
+        if(actions[i](previous) == now):
+            solved = 0
+        i += 1
+    return actionsName[i-1]
+

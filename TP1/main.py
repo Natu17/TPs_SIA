@@ -11,10 +11,10 @@ solved = 'wwwwbbbbooooggggrrrryyyy'
 #print(solved)
 #rubik.scrumble()
 
-scramble = rubik.scrumble()
+scramble = rubik.scramble()
 print(scramble) 
 start = time.time()
-algo.dfs( scramble , rubik.actions, rubik.check)
+algo.bfs( scramble , rubik.actions, rubik.check)
 end = time.time()
 print(end - start)
 
