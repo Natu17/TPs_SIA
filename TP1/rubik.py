@@ -71,7 +71,12 @@ def check(state):
 
 #scrumble for starting position
 def scramble():
-    #return("gobybwbyorowgwbgryrwyrgo","SAMPLE")
+    #return("gobybwbyorowgwbgryrwyrgo","SAMPLE BFS") #depth 10
+    #return("gwoyowbogrbgoyrgrbrwybyw", "SAMPLE BFS") #depth 14
+    #return("gowwoyryrbgobrggrwobyybw", "SAMPLE BFS") #depth 12
+    #return("wgrgyowrwowrbgogryboybby", "SAMPLE DFS") 
+    #return("bbrwywowbgywrbygroogyorg", "SAMPLE DFS") 
+    # bbrwywowbgywrbygroogyorg
     state = solved
     moves = ''
     rand = 0
@@ -98,13 +103,13 @@ import time
 def get_moves(pos):
 	return [F(pos),Fc(pos),R(pos),Rc(pos),T(pos),Tc(pos)]
 def depth():
-	start_time = time.time()
-	dist = [{solved}, set(get_moves(solved))]
-	while dist[-1]:
-		dist.append(set())
-		for pos in dist[-2]:
-			for sub_pos in get_moves(pos):
-				if sub_pos not in dist[-2] and sub_pos not in dist[-3]:
-					dist[-1].add(sub_pos)
-		print('Depth ' + str(len(dist) - 1) + ': ' + str(len(dist[-1])) + ' positions')
-	print('2x2 Depth is ' + str(len(dist) - 2) + ', solved in ' + str(round(time.time() - start_time, 2)) + ' seconds')
+    start_time = time.time()
+    dist = [{solved}, set(get_moves(solved))]
+    while dist[-1]:
+        dist.append(set())
+        for pos in dist[-2]:
+            for sub_pos in get_moves(pos):
+                if sub_pos not in dist[-2] and sub_pos not in dist[-3]:
+                    dist[-1].add(sub_pos)
+        print('Depth ' + str(len(dist) - 1) + ': ' + str(len(dist[-1])) + ' positions')
+    print('2x2 Depth is ' + str(len(dist) - 2) + ', solved in ' + str(round(time.time() - start_time, 2)) + ' seconds')

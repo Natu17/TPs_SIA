@@ -1,3 +1,4 @@
+from collections import deque 
 class Node:
     def __init__(self, state,parent = None, action = None):
         self.state = state
@@ -9,13 +10,14 @@ class Node:
 def search(root, actions, condition, pick):
     #ex = set()
     ex = dict()
-    F = [Node(root)]
+    ex[root] = 1
+    F = deque([Node(root)])
     while F:
         node = pick(F)
         state = node.state
-        if(state in ex): continue
+        #if(state in ex): continue
         #ex.add(node.state)
-        ex[state] = 1
+        #ex[state] = 1
         #print(len(ex))
         for action in actions:
             state = action.action(node.state)
@@ -27,7 +29,9 @@ def search(root, actions, condition, pick):
                         if(child.action is not None): moves = child.action + ' ' + moves
                         child = child.parent
                     return moves
+                ex[state] = 1
                 F.append(child)
+    print('solution not found')
 
 dfs = lambda root,actions,condition: search(root,actions,condition, lambda F: F.pop())
-bfs = lambda root,actions,condition: search(root,actions,condition, lambda F: F.pop(0))
+bfs = lambda root,actions,condition: search(root,actions,condition, lambda F: F.popleft())
