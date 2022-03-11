@@ -1,55 +1,28 @@
-from multiprocessing import parent_process
-from rubik import whatAction
-
-
 class Node:
-    def __init__(self, state,parent = None):
+    def __init__(self, state,parent = None, action = None):
         self.state = state
         self.parent = parent
+        self.action = action
     
-    
-
-
-
-def bfs(root,actions, condition):
+def search(root, actions, condition, pick):
     ex = set()
     F = [Node(root)]
-    
     while F:
-        node = F.pop(0)
-        if not(node.state in ex):
-            ex.add(node.state)
-            F.append(node)
-            if(condition(node.state)):
-                print(node.state)
-                return
-            for action in actions:
-                #TODO check if childs are solved
-                child = Node(action(node.state), node)
-                if not(child.state in ex):
-                    F.append(child)
-
-def dfs(root,actions, condition):
-    if condition(root):
-            #Go up in the tree
-            print(root)
-            return
-    ex = set()
-    F = [Node(root)]
-    
-    while F:
-        node = F.pop()
+        node = pick(F)
+        if(node.state in ex): continue
         ex.add(node.state)
+        #print(len(ex))
         for action in actions:
-            #TODO check if childs are solved
-            child = Node(action(node.state), node)
-            if condition(child.state):
-                print(child.state)
-                while(node is not None):
-                    print(whatAction(node.state, child.state))
-                    child = node
-                    node = node.parent
-
-                return
-            if not(child.state in ex):
+            state = action.action(node.state)
+            if not(state in ex): #Create Node AFTER state not explored check
+                child = Node(state, node, action.actionName)
+                if condition(state):
+                    moves = ''
+                    while(child is not None):
+                        if(child.action is not None): moves = child.action + ' ' + moves
+                        child = child.parent
+                    return moves
                 F.append(child)
+
+dfs = lambda root,actions,condition: search(root,actions,condition, lambda F: F.pop())
+bfs = lambda root,actions,condition: search(root,actions,condition, lambda F: F.pop(0))

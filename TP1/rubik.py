@@ -1,8 +1,11 @@
-from ctypes import sizeof
 import random
-from shutil import move
 solved = 'wwwwbbbbooooggggrrrryyyy'
-MAX_DEPTH = 13
+MAX_DEPTH = 10
+
+class Action:
+    def __init__(self, actionName, action):
+        self.actionName = actionName
+        self.action = action
 
 #Front rotation
 def F(state):
@@ -60,9 +63,7 @@ def Tc(state):
     state[20]+state[21]+state[22]+state[23])
 
 
-actions = [F,Fc,R,Rc,T,Tc]
-actionsName = ['F','F\'','R','R\'','T','T\'']
-#actions = [{'name':'F','exec':F}]
+actions = [Action('F',F),Action('F\'',Fc),Action('R',R),Action('R\'',Rc),Action('T',T),Action('T\'',Tc)]
 
 def check(state):
     return state == solved
@@ -75,18 +76,35 @@ def scramble():
     rand = 0
     for i in range(MAX_DEPTH):
         rand = random.randint(0,len(actions)-1)
-        state = actions[rand](state)
-        moves += actionsName[rand] + ' '
-        #print(state)
-    print(moves)
-    return state
+        state = actions[rand].action(state)
+        moves += actions[rand].actionName + ' '
+    return (state, moves)
 
-def whatAction(previous, now):
-    solved = 1
-    i = 0
-    while (solved and i < len(actions)):
-        if(actions[i](previous) == now):
-            solved = 0
-        i += 1
-    return actionsName[i-1]
 
+
+
+
+
+
+
+
+
+
+
+
+
+import time
+
+def get_moves(pos):
+	return [F(pos),Fc(pos),R(pos),Rc(pos),T(pos),Tc(pos)]
+def depth():
+	start_time = time.time()
+	dist = [{solved}, set(get_moves(solved))]
+	while dist[-1]:
+		dist.append(set())
+		for pos in dist[-2]:
+			for sub_pos in get_moves(pos):
+				if sub_pos not in dist[-2] and sub_pos not in dist[-3]:
+					dist[-1].add(sub_pos)
+		print('Depth ' + str(len(dist) - 1) + ': ' + str(len(dist[-1])) + ' positions')
+	print('2x2 Depth is ' + str(len(dist) - 2) + ', solved in ' + str(round(time.time() - start_time, 2)) + ' seconds')
