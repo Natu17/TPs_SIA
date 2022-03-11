@@ -3,14 +3,19 @@ class Node:
         self.state = state
         self.parent = parent
         self.action = action
-    
+
+
+
 def search(root, actions, condition, pick):
-    ex = set()
+    #ex = set()
+    ex = dict()
     F = [Node(root)]
     while F:
         node = pick(F)
-        if(node.state in ex): continue
-        ex.add(node.state)
+        state = node.state
+        if(state in ex): continue
+        #ex.add(node.state)
+        ex[state] = 1
         #print(len(ex))
         for action in actions:
             state = action.action(node.state)

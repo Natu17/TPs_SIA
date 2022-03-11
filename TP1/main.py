@@ -10,7 +10,7 @@ while(True):
     scramble = rubik.scramble()
     print(scramble) 
     start = time.time()
-    solve = algo.bfs( scramble[0] , rubik.actions, rubik.check)
+    solve = algo.dfs( scramble[0] , rubik.actions, rubik.check)
     end = time.time()
     print(solve)
     print(end - start)
