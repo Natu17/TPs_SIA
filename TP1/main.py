@@ -1,20 +1,19 @@
 import rubik
-import algo
+import search
 import time
 
 
 #rubik.depth()
 #exit()
-n = 100
+n = 1
 
 while n:
     n = n - 1
     scramble = rubik.scramble()
     print(scramble) 
     start = time.time()
-    #solve = algo.bfs( scramble[0] , rubik.actions, rubik.check)
-    solve = algo.dfsvl( scramble[0] , rubik.actions, rubik.check,5,3)
+    #solve = search.bfs( scramble[0] , rubik.actions, rubik.check)
+    solve = search.dfsvl( scramble[0] , rubik.actions, rubik.check,1,1)
     end = time.time()
     print(solve)
     print(end - start)
-

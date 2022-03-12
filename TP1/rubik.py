@@ -1,6 +1,6 @@
 import random
 solved = 'wwwwbbbboooogggrrryyy'
-MAX_DEPTH = 10
+MAX_DEPTH = 3
 
 class Action:
     def __init__(self, actionName, action):

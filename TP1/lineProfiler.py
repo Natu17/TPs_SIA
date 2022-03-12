@@ -1,16 +1,16 @@
-import line_profiler ,algo,rubik
+import line_profiler ,search,rubik
 
 
 profiler = line_profiler.LineProfiler()
-profiler.add_function(algo.search)
+profiler.add_function(search.search)
 
-# wrapper = profiler(algo.bfs)
+# wrapper = profiler(search.bfs)
 # wrapper('owwobbbbyyoogggrwwrry' , rubik.actions, rubik.check)
 
-# wrapper = profiler(algo.dfs)
+# wrapper = profiler(search.dfs)
 # wrapper('wwgrwrybobwogobogrbyy' , rubik.actions, rubik.check)
 
-wrapper = profiler(algo.dfsvl)
+wrapper = profiler(search.dfsvl)
 wrapper('ybbggbrwgwrwoywrooyob' , rubik.actions, rubik.check,5,3)
 
 
