@@ -1,6 +1,6 @@
 import random
-solved = 'wwwwbbbbooooggggrrrryyyy'
-MAX_DEPTH = 10
+solved = 'wwwwbbbboooogggrrryyy'
+MAX_DEPTH = 50
 
 class Action:
     def __init__(self, actionName, action):
@@ -9,30 +9,30 @@ class Action:
 
 #Front rotation
 def F(state):
-    return ''.join([state[19],state[1],state[2],state[18],
+    return ''.join([state[17],state[1],state[2],state[16],
     state[7],state[4],state[5],state[6],
     state[3],state[0],state[10],state[11],
-    state[12],state[13],state[14],state[15],
-    state[16],state[17],state[21],state[22],
-    state[20],state[8],state[9],state[23]])
+    state[12],state[13],state[14],
+    state[15],state[18],state[19],
+    state[8],state[9],state[20]])
 
 # Front' rotation
 def Fc(state):
     return ''.join([state[9],state[1],state[2],state[8],
     state[5],state[6],state[7],state[4],
-    state[21],state[22],state[10],state[11],
-    state[12],state[13],state[14],state[15],
-    state[16],state[17],state[3],state[0],
-    state[20],state[18],state[19],state[23]])
+    state[18],state[19],state[10],state[11],
+    state[12],state[13],state[14],
+    state[15],state[3],state[0],
+    state[16],state[17],state[20]])
 
 #Right rotation
 def R(state):
     return ''.join([state[0],state[1],state[6],state[7],
-    state[4],state[5],state[22],state[23],
+    state[4],state[5],state[19],state[20],
     state[11],state[8],state[9],state[10],
-    state[2],state[3],state[14],state[15],
-    state[16],state[17],state[18],state[19],
-    state[20],state[21],state[12],state[13]])
+    state[2],state[3],state[14],
+    state[15],state[16],state[17],
+    state[18],state[12],state[13]])
 
 
 #Right' rotation
@@ -40,27 +40,27 @@ def Rc(state):
     return ''.join([state[0],state[1],state[12],state[13],
     state[4],state[5],state[2],state[3],
     state[9],state[10],state[11],state[8],
-    state[22],state[23],state[14],state[15],
-    state[16],state[17],state[18],state[19],
-    state[20],state[21],state[6],state[7]])
+    state[19],state[20],state[14],
+    state[15],state[16],state[17],
+    state[18],state[6],state[7]])
 
 #Top rotation
 def T(state):
     return ''.join([state[3],state[0],state[1],state[2],
     state[4],state[9],state[10],state[7],
     state[8],state[13],state[14],state[11],
-    state[12],state[17],state[18],state[15],
-    state[16],state[5],state[6],state[19],
-    state[20],state[21],state[22],state[23]])
+    state[12],state[15],state[16],
+    state[5],state[6],state[17],
+    state[18],state[19],state[20]])
 
 #Top' rotation
 def Tc(state):
     return ''.join([state[1],state[2],state[3],state[0],
-    state[4],state[17],state[18],state[7],
+    state[4],state[15],state[16],state[7],
     state[8],state[5],state[6],state[11],
-    state[12],state[9],state[10],state[15],
-    state[16],state[13],state[14],state[19],
-    state[20],state[21],state[22],state[23]])
+    state[12],state[9],state[10],
+    state[13],state[14],state[17],
+    state[18],state[19],state[20]])
 
 
 actions = [Action('F',F),Action('F\'',Fc),Action('R',R),Action('R\'',Rc),Action('T',T),Action('T\'',Tc)]
@@ -71,12 +71,12 @@ def check(state):
 
 #scrumble for starting position
 def scramble():
-    #return("gobybwbyorowgwbgryrwyrgo","SAMPLE BFS") #depth 10
-    #return("gwoyowbogrbgoyrgrbrwybyw", "SAMPLE BFS") #depth 14
-    #return("gowwoyryrbgobrggrwobyybw", "SAMPLE BFS") #depth 12
-    #return("wgrgyowrwowrbgogryboybby", "SAMPLE DFS") 
-    #return("bbrwywowbgywrbygroogyorg", "SAMPLE DFS") 
-    # bbrwywowbgywrbygroogyorg
+    #return("gobybwbyorowgwbyrwygo","SAMPLE BFS") #depth 10
+    return("gwoyowbogrbgoyrbrwbyw", "SAMPLE BFS") #depth 14
+    #return("gowwoyryrbgobrgwobybw", "SAMPLE BFS") #depth 12
+    #return("wgrgyowrwowrbgoybobby", "SAMPLE DFS") 
+    #return("bbrwywowbgywrbyoogorg", "SAMPLE DFS") 
+    # bbrwywowbgywrbyoogorg
     state = solved
     moves = ''
     rand = 0
