@@ -1,0 +1,4 @@
+networkx
+matplotlib
+pydot
+line_profiler

@@ -5,7 +5,7 @@ import time
 
 #rubik.depth()
 #exit()
-n = 10
+n = 100
 
 while n:
     n = n - 1
@@ -13,7 +13,7 @@ while n:
     print(scramble) 
     start = time.time()
     #solve = algo.bfs( scramble[0] , rubik.actions, rubik.check)
-    solve = algo.dfslv( scramble[0] , rubik.actions, rubik.check,3,2)
+    solve = algo.dfsvl( scramble[0] , rubik.actions, rubik.check,5,3)
     end = time.time()
     print(solve)
     print(end - start)

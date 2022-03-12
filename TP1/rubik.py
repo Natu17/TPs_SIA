@@ -1,6 +1,6 @@
 import random
 solved = 'wwwwbbbboooogggrrryyy'
-MAX_DEPTH = 50
+MAX_DEPTH = 10
 
 class Action:
     def __init__(self, actionName, action):
@@ -72,10 +72,11 @@ def check(state):
 #scrumble for starting position
 def scramble():
     #return("gobybwbyorowgwbyrwygo","SAMPLE BFS") #depth 10
-    return("gwoyowbogrbgoyrbrwbyw", "SAMPLE BFS") #depth 14
+    #return("gwoyowbogrbgoyrbrwbyw", "SAMPLE BFS") #depth 14
     #return("gowwoyryrbgobrgwobybw", "SAMPLE BFS") #depth 12
     #return("wgrgyowrwowrbgoybobby", "SAMPLE DFS") 
     #return("bbrwywowbgywrbyoogorg", "SAMPLE DFS") 
+    #return("bgwyorgoyoorbgrwwwbby", "SAMPLE DFSVL")
     # bbrwywowbgywrbyoogorg
     state = solved
     moves = ''

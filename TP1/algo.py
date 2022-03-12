@@ -1,118 +1,106 @@
-from collections import deque 
+from collections import deque
 from graphics import update
 
-graphics = True
+graphics = False
 
 class Node:
-    def __init__(self, state,parent = None, action = None, depth=None):
+    def __init__(self, state,parent = None, action = None, depth=0):
         self.state = state
         self.parent = parent
         self.action = action
         self.depth = depth
 
+class Dfs:
+    def __init__(self):
+        self.F = deque()
+        self.ex = dict()
+    
+    def add(self,child):
+        self.F.append(child)
+        self.ex[child.state] = 1
+    
+    def pick(self):
+        return self.F.pop()
+
+    def isEmpty(self):
+        return not(self.F)
+
+    def needExploring(self, state, depth):
+        return not(state in self.ex)
+
+class Bfs:
+    def __init__(self):
+        self.F = deque()
+        self.ex = dict()
+    
+    def add(self,child):
+        self.F.append(child)
+        self.ex[child.state] = 1
+    
+    def pick(self):
+        return self.F.popleft()
+    
+    def isEmpty(self):
+        return not(self.F)
+
+    def needExploring(self, state, depth):
+        return not(state in self.ex)
+
+class Dfsvl:
+    
+    def __init__(self, limit, step):
+        self.limit = limit
+        self.step = step
+        self.F1 = deque()
+        self.F2 = deque()
+        self.ex = dict()
+
+    def add(self,child):
+        if child.depth > self.limit:
+            self.F2.append(child)
+        else: self.F1.append(child)
+        self.ex[child.state] = child.depth
+    
+    def pick(self):
+        if not(self.F1): 
+            F = self.F1
+            self.F1 = self.F2
+            self.F2 = F
+            self.limit += self.step
+        return self.F1.pop()
+
+    def isEmpty(self):
+        return not(self.F1 or self.F2)
+
+    def needExploring(self, state, depth):
+        d = self.ex.get(state)
+        return d is None or d < depth
+
+      
+    
 
 
-def search(root, actions, condition, pick):
+def search(root, actions, condition, manager):
     r=Node(root)
-    ex = dict()
-    ex[root] = 1
-    F = deque([r])
-    while F:
-        node = pick(F)
+    manager.add(r)
+    while not(manager.isEmpty()):
+        node = manager.pick()
         state = node.state
         for action in actions:
             state = action.action(node.state)
-            if not(state in ex): #Create Node AFTER state not explored check
-                child = Node(state, node, action.actionName)
+            if manager.needExploring(state, node.depth + 1): #Create Node AFTER state not explored check
+                child = Node(state, node, action.actionName, node.depth + 1)
                 if condition(state):
                     moves = ''
                     while(child):
-                        if(child.action): moves = ''.join([child.action,moves])
+                        if(child.action): moves = ' '.join([child.action,moves])
                         child = child.parent
                     return moves
-                ex[state] = 1
-                F.append(child)
+                manager.add(child)
                 if graphics: update(child)
     print('solution not found')
 
-dfs = lambda root,actions,condition: search(root,actions,condition, lambda F: F.pop())
-bfs = lambda root,actions,condition: search(root,actions,condition, lambda F: F.popleft())
 
-
-def dfslv(root, actions, condition,limit,step):
-    r = Node(root,None,None,0)
-    ex = dict()
-    F1 = deque([r])
-    F2 = deque()
-    while F1 or F2:
-
-        if not(F1): 
-            F = F1
-            F1 = F2
-            F2 = F
-            limit += step
-        node = F1.pop()
-        state = node.state
-
-        for action in actions:
-            state = action.action(node.state)
-            if not(state in ex): #Create Node AFTER state not explored check
-                child = Node(state, node, action.actionName, node.depth+1)
-                if condition(state):
-                    moves = ''
-                    while(child is not None):
-                        if(child.action): moves = ''.join([child.action,moves])
-                        child = child.parent
-                    return state
-                ex[state] = 1
-                if child.depth > limit:
-                    F2.append(child)
-                else: F1.append(child)
-                if graphics: update(child)
-
-
-
-# def dfslv(root, actions, condition,limit,step):
-#     r = Node(root,None,None,0)
-#     ex = dict()
-#     #ex[root] = 1
-#     depth = 0
-#     count = 0
-#     F = deque([r])   
-#     net.add_node(r)
-
-#     while F:
-#         if limit == count:
-#             node = F.popleft()
-#             if node.depth == limit:
-#                 limit += step
-#                 count = 0
-#             else:
-#                 count = limit
-#         else: 
-#             node = F.pop()
-#             if node.depth == limit:
-#               aux = F.popleft()
-#               if aux is not None:
-#                 if aux.depth == limit:
-#                   limit += step
-#                   count = 0
-#                 F.append(node)
-#                 node = aux    
-#         state = node.state
-        
-#         count = count + 1
-#         for action in actions:
-#             state = action.action(node.state)
-#             if not(state in ex): #Create Node AFTER state not explored check
-#                 child = Node(state, node, action.actionName, node.depth+1)
-#                 if condition(state):
-#                     moves = ''
-#                     while(child is not None):
-#                         if(child.action is not None): moves = child.action + ' ' + moves
-#                         child = child.parent
-#                     return state
-#                 ex[state] = 1
-#                 F.append(child)
-#                 update(child)
-#     print('solution not found')
+dfs = lambda root,actions,condition: search(root,actions,condition, Dfs() )
+bfs = lambda root,actions,condition: search(root,actions,condition,Bfs())
+dfsvl = lambda root, actions, condition, limit, step: search(root,actions, condition, Dfsvl(limit,step))
