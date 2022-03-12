@@ -12,6 +12,7 @@ while n:
     scramble = rubik.scramble()
     print(scramble) 
     start = time.time()
+    #solve = algo.bfs( scramble[0] , rubik.actions, rubik.check)
     solve = algo.dfslv( scramble[0] , rubik.actions, rubik.check,3,2)
     end = time.time()
     print(solve)

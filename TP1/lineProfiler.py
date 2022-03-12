@@ -2,7 +2,7 @@ import line_profiler ,algo,rubik
 
 
 profiler = line_profiler.LineProfiler()
-profiler.add_function(algo.search)
+#profiler.add_function(algo.search)
 
 # wrapper = profiler(algo.bfs)
 # wrapper('owwobbbbyyooggggrrwwyrry' , rubik.actions, rubik.check)
