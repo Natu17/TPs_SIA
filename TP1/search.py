@@ -134,8 +134,8 @@ def localHeuristicSearch(root, actions, condition):
                     return moves
                 l.add(child)
                 if graphics: update(child)
-                while l is not empty:
-                    F.append(l.pop())
+        while l is not empty:
+            F.append(l.pop())
     print('solution not found')
 
 
