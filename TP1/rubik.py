@@ -91,7 +91,7 @@ def scramble():
 
 
 def heuristic1(state):
-    return random.random()
+    return random.randint(0,100)/100
 
 
 
