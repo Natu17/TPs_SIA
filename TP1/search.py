@@ -1,5 +1,8 @@
 from collections import deque
+
+from numpy import empty
 from graphics import update
+from sortedcontainers import sortedlist
 
 graphics = False
 
@@ -9,6 +12,14 @@ class Node:
         self.parent = parent
         self.action = action
         self.depth = depth
+
+class HeuristicNode:
+    def __init__(self, state,parent = None, action = None, depth=0, heuristic = 0):
+        self.state = state
+        self.parent = parent
+        self.action = action
+        self.depth = depth
+        self.heuristic = heuristic
 
 class Dfs:
     def __init__(self):
@@ -98,6 +109,33 @@ def search(root, actions, condition, manager):
                     return moves
                 manager.add(child)
                 if graphics: update(child)
+    print('solution not found')
+
+
+def localHeuristicSearch(root, actions, condition):
+    r = HeuristicNode(root)
+    F = deque()
+    ex = dict()
+    l = sortedlist()
+    F.append(r)
+    ex[root] = 1
+    while not(F.isEmpty()):
+        node = F.pop
+        state = node.state
+        for action in actions:
+            state = action.action(node.state)
+            if state not in ex: #Create Node AFTER state not explored check
+                child = HeuristicNode(state, node, action.actionName, node.depth + 1)
+                if condition(state):
+                    moves = ''
+                    while(child):
+                        if(child.action): moves = ' '.join([child.action,moves])
+                        child = child.parent
+                    return moves
+                l.add(child)
+                if graphics: update(child)
+                while l is not empty:
+                    F.append(l.pop())
     print('solution not found')
 
 
