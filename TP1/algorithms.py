@@ -70,5 +70,24 @@ class Dfsvl:
 
   
 class LocalHeuristic:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, heuristic):
+        self.F = deque()
+        self.ex = dict()
+        self.l = SortedList(key=lambda node: node.heuristic)
+        self.heuristic = heuristic
+    
+    def add(self,child):
+        child.heuristic = self.heuristic(child.state)
+        self.l.add(child)
+        self.ex[child.state] = 1
+    
+    def pick(self):
+        while self.l:
+            self.F.append(self.l.pop())
+        return self.F.pop()
+
+    def isEmpty(self):
+        return not(self.F or self.l)
+
+    def needExploring(self, state, depth):
+        return not(state in self.ex)

@@ -1,5 +1,6 @@
 networkx
 matplotlib
+pyparsing==2.4.7
 pydot
 line_profiler
 sortedcontainers

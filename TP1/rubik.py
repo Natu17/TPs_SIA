@@ -1,6 +1,6 @@
 import random
 solved = 'wwwwbbbboooogggrrryyy'
-MAX_DEPTH = 3
+MAX_DEPTH = 14
 
 class Action:
     def __init__(self, actionName, action):
@@ -90,12 +90,8 @@ def scramble():
 
 
 
-
-
-
-
-
-
+def heuristic1(state):
+    return random.random()
 
 
 
