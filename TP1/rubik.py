@@ -1,6 +1,14 @@
+from collections import deque
+from ntpath import join
 import random
+
+from search import Node
+
+from algorithms import Bfs
+
 solved = 'wwwwbbbboooogggrrryyy'
-MAX_DEPTH = 14
+cubes = [[0,5,16], [1,14,15], [2,10,13], [3,6,9], [4,17,18],[7,8,19],[11,12,20]]
+MAX_DEPTH = 9
 
 class Action:
     def __init__(self, actionName, action):
@@ -72,7 +80,7 @@ def check(state):
 #scrumble for starting position
 def scramble():
     #return("gobybwbyorowgwbyrwygo","SAMPLE BFS") #depth 10
-    #return("gwoyowbogrbgoyrbrwbyw", "SAMPLE BFS") #depth 14
+    return("gwoyowbogrbgoyrbrwbyw", "SAMPLE BFS") #depth 14
     #return("gowwoyryrbgobrgwobybw", "SAMPLE BFS") #depth 12
     #return("wgrgyowrwowrbgoybobby", "SAMPLE DFS") 
     #return("bbrwywowbgywrbyoogorg", "SAMPLE DFS") 
@@ -90,9 +98,36 @@ def scramble():
 
 
 
-def heuristic1(node):
-    return random.randint(0,100)/100
+def heurManDist(node):
+    heuristic = 0
+    for i in cubes:
+        heuristic += manhBfs(node, i)
+    return heuristic/4
 
+def cubeCheck(state, cube):
+    a = True
+    for i in cube:
+        if state[i] != solved[i]:
+            a = False
+            return a
+    return a
+
+def manhBfs(root, cube):
+    F = deque()
+    ex = dict()
+    F.append(root)
+    ex[root.state] = 1
+    while F:
+        node = F.popleft()
+        state = node.state
+        for action in actions:
+            state = action.action(node.state)
+            if not(state in ex): #Create Node AFTER state not explored check
+                child = Node(state, node, action.actionName, node.depth + 1)
+                if cubeCheck(state, cube):
+                    return child.depth
+                F.append(child)
+    return
 
 
 import time
