@@ -2,3 +2,4 @@ networkx
 matplotlib
 pydot
 line_profiler
+sortedcontainers
