@@ -76,7 +76,7 @@ class LocalHeuristic:
         self.heuristic = heuristic
     
     def add(self,child):
-        child.heuristic = self.heuristic(child.state)
+        child.heuristic = self.heuristic(child)
         self.l.add(child)
         self.ex[child.state] = 1
     
@@ -90,7 +90,7 @@ class LocalHeuristic:
 
     def needExploring(self, state, depth):
         return not(state in self.ex)
-        
+
 class GlobalHeuristic:
     def __init__(self, heuristic):
         self.F = SortedList(key=lambda node: -node.heuristic)
@@ -98,7 +98,7 @@ class GlobalHeuristic:
         self.heuristic = heuristic
     
     def add(self,child):
-        child.heuristic = self.heuristic(child.state)
+        child.heuristic = self.heuristic(child)
         self.F.add(child)
         self.ex[child.state] = 1
     

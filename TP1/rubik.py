@@ -90,7 +90,7 @@ def scramble():
 
 
 
-def heuristic1(state):
+def heuristic1(node):
     return random.randint(0,100)/100
 
 
