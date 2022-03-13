@@ -4,13 +4,12 @@ from algorithms import *
 graphics = True
 
 class Node:
-    def __init__(self, state,parent = None, action = None, depth=0, heuristic=0):
+    def __init__(self, state,parent = None, action = None, depth=0, heuristic = 0):
         self.state = state
         self.parent = parent
         self.action = action
         self.depth = depth
         self.heuristic = heuristic
-
 
 def search(root, actions, condition, manager):
     r=Node(root)
@@ -37,3 +36,4 @@ dfs = lambda root,actions,condition: search(root,actions,condition, Dfs() )
 bfs = lambda root,actions,condition: search(root,actions,condition,Bfs())
 dfsvl = lambda root, actions, condition, limit, step: search(root,actions, condition, Dfsvl(limit,step))
 localHeuristic = lambda root,actions,condition, heuristic: search(root,actions,condition, LocalHeuristic(heuristic))
+globalHeuristic = lambda root,actions,condition, heuristic: search(root,actions,condition, GlobalHeuristic(heuristic))
