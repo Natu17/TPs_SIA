@@ -20,6 +20,12 @@ class Dfs:
     def needExploring(self, state, depth):
         return not(state in self.ex)
 
+    def getExplored(self):
+        return len(self.ex) - self.getBorder()
+    
+    def getBorder(self):
+        return len(self.F)
+
 class Bfs:
     def __init__(self):
         self.F = deque()
@@ -37,6 +43,12 @@ class Bfs:
 
     def needExploring(self, state, depth):
         return not(state in self.ex)
+    
+    def getExplored(self):
+        return len(self.ex) - self.getBorder()
+    
+    def getBorder(self):
+        return len(self.F)
 
 class Dfsvl:
     
@@ -68,6 +80,12 @@ class Dfsvl:
         d = self.ex.get(state)
         return d is None or d < depth
 
+    def getExplored(self):
+        return len(self.ex) - self.getBorder()
+    
+    def getBorder(self):
+        return len(self.F1) + len(self.F2)
+
 class LocalHeuristic:
     def __init__(self, heuristic):
         self.F = deque()
@@ -90,6 +108,12 @@ class LocalHeuristic:
 
     def needExploring(self, state, depth):
         return not(state in self.ex)
+    
+    def getExplored(self):
+        return len(self.ex) - self.getBorder()
+    
+    def getBorder(self):
+        return len(self.F) + len(self.l)
 
 class GlobalHeuristic:
     def __init__(self, heuristic):
@@ -110,3 +134,9 @@ class GlobalHeuristic:
 
     def needExploring(self, state, depth):
         return not(state in self.ex)
+    
+    def getExplored(self):
+        return len(self.ex) - self.getBorder()
+    
+    def getBorder(self):
+        return len(self.F)

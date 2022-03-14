@@ -1,10 +1,10 @@
 from graphics import update
 from algorithms import *
 
-graphics = True
+graphics = False
 
 class Node:
-    def __init__(self, state,parent = None, action = None, depth=0, heuristic = 0):
+    def __init__(self, state,parent = None, action = '', depth=0, heuristic = 0):
         self.state = state
         self.parent = parent
         self.action = action
@@ -22,11 +22,13 @@ def search(root, actions, condition, manager):
             if manager.needExploring(state, node.depth + 1): #Create Node AFTER state not explored check
                 child = Node(state, node, action.actionName, node.depth + 1)
                 if condition(state):
-                    moves = ''
+                    #moves = ''
+                    list = deque()
                     while(child):
-                        if(child.action): moves = ' '.join([child.action,moves])
+                        #if(child.action): moves = ' '.join([child.action,moves])
+                        list.appendleft(child)
                         child = child.parent
-                    return moves
+                    return {"nodes":list, "border":manager.getBorder(), "explored":manager.getExplored()}
                 manager.add(child)
                 if graphics: update(child)
     print('solution not found')

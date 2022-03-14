@@ -7,7 +7,21 @@ from search import Node
 from algorithms import Bfs
 
 solved = 'wwwwbbbboooogggrrryyy'
-cubes = [[0,5,16], [1,14,15], [2,10,13], [3,6,9], [4,17,18],[7,8,19],[11,12,20]]
+cubes = ((0,5,16), (1,14,15), (2,10,13), (3,6,9), (4,17,18),(7,8,19),(11,12,20))
+positions = ((0,1,1), (0,1,0), (1,1,0), (1,1,1), (0,0,1),(1,0,1),(1,0,0))
+
+
+hash = {
+    "rwb":0, "rbw":0, "wrb":0, "wbr":0,"bwr":0, "brw":0,
+    "rwg":1, "rgw":1, "wrg":1, "wgr":1,"gwr":1, "grw":1,
+    "owg":2, "ogw":2, "wog":2, "wgo":2,"gwo":2, "gow":2,
+    "owb":3, "obw":3, "wob":3, "wbo":3,"bwo":3, "bow":3,
+    "ryb":4, "rby":4, "yrb":4, "ybr":4,"byr":4, "bry":4,
+    "oyb":5, "oby":5, "yob":5, "ybo":5,"byo":5, "boy":5,
+    "oyg":6, "ogy":6, "yog":6, "ygo":6,"gyo":6, "goy":6,
+}
+
+
 MAX_DEPTH = 9
 
 class Action:
@@ -100,34 +114,17 @@ def scramble():
 
 def heurManDist(node):
     heuristic = 0
-    for i in cubes:
-        heuristic += manhBfs(node, i)
+    for i in range(0,len(cubes)):
+        heuristic += manDist(node.state, i)
     return heuristic/4
 
-def cubeCheck(state, cube):
-    a = True
-    for i in cube:
-        if state[i] != solved[i]:
-            a = False
-            return a
-    return a
-
-def manhBfs(root, cube):
-    F = deque()
-    ex = dict()
-    F.append(root)
-    ex[root.state] = 1
-    while F:
-        node = F.popleft()
-        state = node.state
-        for action in actions:
-            state = action.action(node.state)
-            if not(state in ex): #Create Node AFTER state not explored check
-                child = Node(state, node, action.actionName, node.depth + 1)
-                if cubeCheck(state, cube):
-                    return child.depth
-                F.append(child)
-    return
+def manDist(state, i):
+    cube = cubes[i]
+    c1 = hash[''.join([solved[cube[0]],solved[cube[1]],solved[cube[2]]])]
+    for j,cube in enumerate(cubes):
+        c2 = hash[''.join([state[cube[0]],state[cube[1]],state[cube[2]]])]
+        if c1 == c2: 
+            return abs(positions[i][0] - positions[j][0]) + abs(positions[i][1] - positions[j][1]) + abs(positions[i][2] - positions[j][2])
 
 
 import time
