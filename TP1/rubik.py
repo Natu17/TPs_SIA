@@ -50,7 +50,6 @@ def R(state):
     state[15],state[16],state[17],
     state[18],state[12],state[13]])
 
-
 #Right' rotation
 def Rc(state):
     return ''.join([state[0],state[1],state[12],state[13],
@@ -87,13 +86,6 @@ def check(state):
 
 #scrumble for starting position
 def scramble(max_depth):
-    #return("gobybwbyorowgwbyrwygo","SAMPLE BFS") #depth 10
-    #return("gwoyowbogrbgoyrbrwbyw", "SAMPLE BFS") #depth 14
-    #return("gowwoyryrbgobrgwobybw", "SAMPLE BFS") #depth 12
-    #return("wgrgyowrwowrbgoybobby", "SAMPLE DFS") 
-    #return("bbrwywowbgywrbyoogorg", "SAMPLE DFS") 
-    #return("bgwyorgoyoorbgrwwwbby", "SAMPLE DFSVL")
-    # bbrwywowbgywrbyoogorg
     state = solved
     moves = ''
     rand = 0
@@ -103,63 +95,3 @@ def scramble(max_depth):
         moves += actions[rand].actionName + ' '
     return (state, moves)
 
-
-def dist3D(node):
-    heuristic = 0
-    for i in range(0,len(cubes)):
-        heuristic += manDist(node.state, i)
-    return heuristic/4
-
-def manhattanDistance(node):
-    heuristic = 0
-    for i in cubes:
-        heuristic += manhBfs(node.state, i)
-    return heuristic/4
-
-def manDist(state, i):
-    cube = cubes[i]
-    c1 = hash[''.join([solved[cube[0]],solved[cube[1]],solved[cube[2]]])]
-    for j,cube in enumerate(cubes):
-        c2 = hash[''.join([state[cube[0]],state[cube[1]],state[cube[2]]])]
-        if c1 == c2: 
-            return abs(positions[i][0] - positions[j][0]) + abs(positions[i][1] - positions[j][1]) + abs(positions[i][2] - positions[j][2])
-
-def cubeCheck(state, cube):
-    for i in cube:
-        if state[i] != solved[i]:
-            return False
-    return True
-
-def heurCubes(node):
-    state = node.state
-    total = 0
-    for cube in cubes:
-        if cubeCheck(state, cube):
-            total += 1
-    return 7-total
-
-
-def manhBfs(root, cube): 
-    return search.bfs(root, actions, lambda state: cubeCheck(state,cube))["nodes"].pop().depth
-
-def heurRookie(node):
-    state = node.state 
-    total = 0
-    for i in range(0, len(state)):
-        total += 1 if state[i]==solved[i] else 0
-    return 21 - total 
-
-import time
-def get_moves(pos):
-	return [F(pos),Fc(pos),R(pos),Rc(pos),T(pos),Tc(pos)]
-def depth():
-    start_time = time.time()
-    dist = [{solved}, set(get_moves(solved))]
-    while dist[-1]:
-        dist.append(set())
-        for pos in dist[-2]:
-            for sub_pos in get_moves(pos):
-                if sub_pos not in dist[-2] and sub_pos not in dist[-3]:
-                    dist[-1].add(sub_pos)
-        print('Depth ' + str(len(dist) - 1) + ': ' + str(len(dist[-1])) + ' positions')
-    print('2x2 Depth is ' + str(len(dist) - 2) + ', solved in ' + str(round(time.time() - start_time, 2)) + ' seconds')

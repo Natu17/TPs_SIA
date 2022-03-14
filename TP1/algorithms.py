@@ -58,6 +58,7 @@ class Dfsvl:
         self.F1 = deque()
         self.F2 = deque()
         self.ex = dict()
+        self.explored = 0
 
     def add(self,child):
         if child.depth > self.limit:
@@ -66,6 +67,7 @@ class Dfsvl:
         self.ex[child.state] = child.depth
     
     def pick(self):
+        self.explored+=1
         if not(self.F1): 
             F = self.F1
             self.F1 = self.F2
@@ -81,7 +83,7 @@ class Dfsvl:
         return d is None or d < depth
 
     def getExplored(self):
-        return len(self.ex) - self.getBorder()
+        return self.explored
     
     def getBorder(self):
         return len(self.F1) + len(self.F2)

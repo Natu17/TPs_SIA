@@ -13,6 +13,8 @@ class Node:
 
 def search(root, actions, condition, manager):
     r=Node(root)
+    if condition(root):
+        return {"nodes":[r], "border":0, "explored":0, "depth":0}
     manager.add(r)
     while not(manager.isEmpty()):
         node = manager.pick()
@@ -24,11 +26,12 @@ def search(root, actions, condition, manager):
                 if condition(state):
                     #moves = ''
                     list = deque()
+                    depth = child.depth
                     while(child):
                         #if(child.action): moves = ' '.join([child.action,moves])
                         list.appendleft(child)
                         child = child.parent
-                    return {"nodes":list, "border":manager.getBorder(), "explored":manager.getExplored()}
+                    return {"nodes":list, "border":manager.getBorder(), "explored":manager.getExplored(), "depth":depth}
                 manager.add(child)
                 if graphics: update(child)
     print('solution not found')
