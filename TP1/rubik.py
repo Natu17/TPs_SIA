@@ -130,6 +130,14 @@ def cubeCheck(state, cube):
             return False
     return True
 
+def heurCubes(node):
+    state = node.state
+    total = 0
+    for cube in cubes:
+        if cubeCheck(state, cube):
+            total += 1
+    return 7-total
+
 
 def manhBfs(root, cube): 
     return search.bfs(root, actions, lambda state: cubeCheck(state,cube))["nodes"].pop().depth
