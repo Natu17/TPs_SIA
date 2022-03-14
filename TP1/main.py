@@ -20,7 +20,7 @@ config.setdefault("heuristic","manhattan")
 config.setdefault("max_depth",5)
 config.setdefault("initial_state",rubik.scramble(config["max_depth"])[0])
 
-heuristics = {"manhattan":rubik.heurManDist}
+heuristics = {"manhattan":rubik.heurManDist, "rookie":rubik.heurRookie}
 
 initial_state = config.get("initial_state")
 algorithm = config.get("algorithm")

@@ -1,5 +1,7 @@
 from collections import deque
+from http.client import FORBIDDEN
 import random
+
 
 from search import Node
 
@@ -121,6 +123,12 @@ def manDist(state, i):
         if c1 == c2: 
             return abs(positions[i][0] - positions[j][0]) + abs(positions[i][1] - positions[j][1]) + abs(positions[i][2] - positions[j][2])
 
+def heurRookie(node):
+    state = node.state 
+    total = 0
+    for i in range(0, len(state)):
+        total += 1 if state[i]==solved[i] else 0
+    return 21 - total 
 
 import time
 

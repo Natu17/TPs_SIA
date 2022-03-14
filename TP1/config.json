@@ -1,6 +1,7 @@
 {
-    "algorithm":"A",
-    "initial_state":"oowybbbgwrrowbygwyorg",
+    "algorithm":"GH",
+    "heuristic":"rookie",
+    "initial_state":"gwoyowbogrbgoyrbrwbyw",
     "step": 2,
     "limit": 5,
     "max_depth": 10
