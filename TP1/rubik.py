@@ -116,6 +116,12 @@ def manhattanDistance(node):
         heuristic += manhBfs(node.state, i)
     return heuristic/4
 
+def manhattanDistancestate(state):
+    heuristic = 0
+    for i in cubes:
+        heuristic += manhBfs(state, i)
+    return heuristic/4
+
 def manDist(state, i):
     cube = cubes[i]
     c1 = hash[''.join([solved[cube[0]],solved[cube[1]],solved[cube[2]]])]
