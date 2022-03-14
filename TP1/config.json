@@ -1,0 +1,8 @@
+{
+    "algorithm":"A",
+    "initial_state":"oowybbbgwrrowbygwyorg",
+    "step": 2,
+    "limit": 5,
+    "max_depth": 10
+
+}

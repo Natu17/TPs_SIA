@@ -1,5 +1,4 @@
 from collections import deque
-from ntpath import join
 import random
 
 from search import Node
@@ -21,8 +20,6 @@ hash = {
     "oyg":6, "ogy":6, "yog":6, "ygo":6,"gyo":6, "goy":6,
 }
 
-
-MAX_DEPTH = 9
 
 class Action:
     def __init__(self, actionName, action):
@@ -92,9 +89,9 @@ def check(state):
 
 
 #scrumble for starting position
-def scramble():
+def scramble(max_depth):
     #return("gobybwbyorowgwbyrwygo","SAMPLE BFS") #depth 10
-    return("gwoyowbogrbgoyrbrwbyw", "SAMPLE BFS") #depth 14
+    #return("gwoyowbogrbgoyrbrwbyw", "SAMPLE BFS") #depth 14
     #return("gowwoyryrbgobrgwobybw", "SAMPLE BFS") #depth 12
     #return("wgrgyowrwowrbgoybobby", "SAMPLE DFS") 
     #return("bbrwywowbgywrbyoogorg", "SAMPLE DFS") 
@@ -103,13 +100,11 @@ def scramble():
     state = solved
     moves = ''
     rand = 0
-    for i in range(MAX_DEPTH):
+    for i in range(max_depth):
         rand = random.randint(0,len(actions)-1)
         state = actions[rand].action(state)
         moves += actions[rand].actionName + ' '
     return (state, moves)
-
-
 
 
 def heurManDist(node):
