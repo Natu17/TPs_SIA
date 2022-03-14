@@ -1,8 +1,10 @@
 {
-    "algorithm":"A",
+    "algorithm":"GH",
+    "heuristic":"dist3D",
     "initial_state":"oowybbbgwrrowbygwyorg",
     "step": 2,
     "limit": 5,
-    "max_depth": 10
+    "max_depth": 10,
+    "graphics": true
 
 }

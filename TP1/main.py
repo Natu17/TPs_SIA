@@ -18,15 +18,17 @@ config.setdefault("step",2)
 config.setdefault("limit",5)
 config.setdefault("heuristic","manhattan")
 config.setdefault("max_depth",5)
+config.setdefault("graphics", False)
 config.setdefault("initial_state",rubik.scramble(config["max_depth"])[0])
 
-heuristics = {"manhattan":rubik.heurManDist}
+heuristics = {"manhattan":rubik.manhattanDistance, "dist3D": rubik.dist3D}
 
 initial_state = config.get("initial_state")
 algorithm = config.get("algorithm")
 heurisitic = heuristics[config.get("heuristic")]
 
 print("algorithm " + config.get("algorithm"))
+search.graphics = config.get("graphics")
 start = time.time()
 if not algorithm or algorithm=="BFS":
     solve = search.bfs( initial_state , rubik.actions, rubik.check)

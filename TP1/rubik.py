@@ -1,9 +1,6 @@
-from collections import deque
 import random
+import search
 
-from search import Node
-
-from algorithms import Bfs
 
 solved = 'wwwwbbbboooogggrrryyy'
 cubes = ((0,5,16), (1,14,15), (2,10,13), (3,6,9), (4,17,18),(7,8,19),(11,12,20))
@@ -107,10 +104,16 @@ def scramble(max_depth):
     return (state, moves)
 
 
-def heurManDist(node):
+def dist3D(node):
     heuristic = 0
     for i in range(0,len(cubes)):
         heuristic += manDist(node.state, i)
+    return heuristic/4
+
+def manhattanDistance(node):
+    heuristic = 0
+    for i in cubes:
+        heuristic += manhBfs(node.state, i)
     return heuristic/4
 
 def manDist(state, i):
@@ -121,9 +124,18 @@ def manDist(state, i):
         if c1 == c2: 
             return abs(positions[i][0] - positions[j][0]) + abs(positions[i][1] - positions[j][1]) + abs(positions[i][2] - positions[j][2])
 
+def cubeCheck(state, cube):
+    for i in cube:
+        if state[i] != solved[i]:
+            return False
+    return True
+
+
+def manhBfs(root, cube): 
+    return search.bfs(root, actions, lambda state: cubeCheck(state,cube))["nodes"].pop().depth
+
 
 import time
-
 def get_moves(pos):
 	return [F(pos),Fc(pos),R(pos),Rc(pos),T(pos),Tc(pos)]
 def depth():

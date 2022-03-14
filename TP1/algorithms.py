@@ -117,7 +117,7 @@ class LocalHeuristic:
 
 class GlobalHeuristic:
     def __init__(self, heuristic):
-        self.F = SortedList(key=lambda node: -node.heuristic)
+        self.F = SortedList(key=lambda node: node.heuristic)
         self.ex = dict()
         self.heuristic = heuristic
     
@@ -127,7 +127,7 @@ class GlobalHeuristic:
         self.ex[child.state] = 1
     
     def pick(self):
-        return self.F.pop()
+        return self.F.pop(0)
     
     def isEmpty(self):
         return not(self.F)
