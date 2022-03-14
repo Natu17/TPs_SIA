@@ -21,7 +21,8 @@ config.setdefault("max_depth",5)
 config.setdefault("graphics", False)
 config.setdefault("initial_state",rubik.scramble(config["max_depth"])[0])
 
-heuristics = {"manhattan":rubik.manhattanDistance, "dist3D": rubik.dist3D}
+heuristics = {"manhattan":rubik.manhattanDistance, "dist3D": rubik.dist3D, "rookie":rubik.heurRookie}
+
 
 initial_state = config.get("initial_state")
 algorithm = config.get("algorithm")

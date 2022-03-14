@@ -1,6 +1,6 @@
+
 import random
 import search
-
 
 solved = 'wwwwbbbboooogggrrryyy'
 cubes = ((0,5,16), (1,14,15), (2,10,13), (3,6,9), (4,17,18),(7,8,19),(11,12,20))
@@ -134,6 +134,12 @@ def cubeCheck(state, cube):
 def manhBfs(root, cube): 
     return search.bfs(root, actions, lambda state: cubeCheck(state,cube))["nodes"].pop().depth
 
+def heurRookie(node):
+    state = node.state 
+    total = 0
+    for i in range(0, len(state)):
+        total += 1 if state[i]==solved[i] else 0
+    return 21 - total 
 
 import time
 def get_moves(pos):
