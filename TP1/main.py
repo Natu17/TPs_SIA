@@ -57,3 +57,5 @@ print("Explored " + str(solve["explored"]))
 print("Border " + str(solve["border"]))
 print("time " + str(end - start))
 print("depth " + str(solve["depth"]))
+
+input("press enter to close...")

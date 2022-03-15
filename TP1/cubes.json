@@ -1,6 +1,7 @@
 {
-    "algorithm":"LH",
+    "algorithm":"GH",
     "heuristic":"cubes",
+    "initial_state":"wbbwbrryobyowoowgrygg",
     "max_depth": 3,
     "graphics": true
 
