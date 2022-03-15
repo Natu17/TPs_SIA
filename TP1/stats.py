@@ -120,16 +120,30 @@ def plotStats(N,depth, heuris, algos, prefix,width=30,height=10):
     plt.draw()
     plt.savefig(prefix + "depth.png")
 
-# plotStats(10,3,["manhattan","dist3D","rookie","cubes"],["bfs","dfs","dfsvl","lh","gh","a"],"plots2/all-")
 
-# plotStats(10,3,["manhattan","dist3D","rookie","cubes"],["bfs","lh"],"plots2/lh-",10)
+import os
 
-# plotStats(10,3,["manhattan","dist3D","rookie","cubes"],["bfs","gh"],"plots2/gh-",10)
 
-# plotStats(10,6,["manhattan","rookie","cubes"],["bfs","gh"],"plots2/gh-nodist-",10)
 
-# plotStats(10,6,["manhattan","rookie","cubes"],["bfs","a"],"plots2/A-",10)
+for d in range(1,14):
 
-# plotStats(10,6,["manhattan","rookie","cubes"],["bfs","dfsvl","a"],"plots2/quick-",10)
+    folder = "graphs/"+str(d) + "/"
+    try:
+        os.makedirs(folder)
+    except:
+        pass
+
+
+    plotStats(10,d,["manhattan","dist3D","rookie","cubes"],["bfs","dfs","dfsvl","lh","gh","a"],folder + "all-")
+
+    plotStats(10,d,["manhattan","dist3D","rookie","cubes"],["bfs","lh"],folder +"lh-",10)
+
+    plotStats(10,d,["manhattan","dist3D","rookie","cubes"],["bfs","gh"],folder + "gh-",10)
+
+    plotStats(10,d,["manhattan","rookie","cubes"],["bfs","gh"],folder + "gh-nodist-",10)
+
+    plotStats(10,d,["manhattan","rookie","cubes"],["bfs","a"],folder + "A-",10)
+
+    plotStats(10,d,["manhattan","rookie","cubes"],["bfs","dfsvl","a"],folder + "quick-",10)
 
 #plotStats(10,50,[],["bfs","dfs"],"test",5)
