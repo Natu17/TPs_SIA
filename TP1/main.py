@@ -4,6 +4,7 @@ import search
 import time
 import json
 import sys
+import pickleRick
 
 config_path = sys.argv[1] if len(sys.argv)>1 else "config.json"
 
@@ -18,12 +19,13 @@ config.setdefault("max_depth",5)
 config.setdefault("graphics", False)
 config.setdefault("initial_state",rubik.scramble(config["max_depth"])[0])
 
-heuristics = {"manhattan":heuristics.manhattanDistance, "dist3D": heuristics.dist3D, "rookie":heuristics.heurRookie, "cubes":heuristics.heurCubes}
+heuristics = {"manhattan":pickleRick.manhattanwithdict, "dist3D": heuristics.dist3D, "rookie":heuristics.heurRookie, "cubes":heuristics.heurCubes}
 
 
 initial_state = config.get("initial_state")
 algorithm = config.get("algorithm")
 heurisitic = heuristics[config.get("heuristic")]
+
 
 print("algorithm " + config.get("algorithm"))
 search.graphics = config.get("graphics")
