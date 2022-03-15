@@ -1,9 +1,7 @@
 {
-    "algorithm":"GH",
-    "heuristic":"manhattan",
+    "algorithm":"DFSVL",
+    "initial_state":"oowybbbgwrrowbygwyorg",
     "step": 2,
-    "limit": 2,
-    "max_depth": 10,
+    "limit": 5,
     "graphics": false
-
 }
