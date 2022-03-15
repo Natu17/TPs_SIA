@@ -33,7 +33,7 @@ def cubeCheck(state, cube):
 
 
 def manhBfs(root, cube): 
-    return search.bfs(root, actions, lambda state: cubeCheck(state,cube))["nodes"].pop().depth
+    return search.bfs(root, actions, lambda state: cubeCheck(state,cube),True)["nodes"].pop().depth
 
 
 

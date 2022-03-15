@@ -11,7 +11,7 @@ class Node:
         self.depth = depth
         self.heuristic = heuristic
 
-def search(root, actions, condition, manager):
+def search(root, actions, condition, manager,noGraphics=False):
     r=Node(root)
     if condition(root):
         return {"nodes":[r], "border":0, "explored":0, "depth":0}
@@ -33,12 +33,12 @@ def search(root, actions, condition, manager):
                         child = child.parent
                     return {"nodes":list, "border":manager.getBorder(), "explored":manager.getExplored(), "depth":depth}
                 manager.add(child)
-                if graphics: update(child)
+                if not(noGraphics) and graphics: update(child)
     print('solution not found')
 
 
 dfs = lambda root,actions,condition: search(root,actions,condition, Dfs() )
-bfs = lambda root,actions,condition: search(root,actions,condition,Bfs())
+bfs = lambda root,actions,condition, noGraphics=False: search(root,actions,condition,Bfs(), noGraphics)
 dfsvl = lambda root, actions, condition, limit, step: search(root,actions, condition, Dfsvl(limit,step))
 localHeuristic = lambda root,actions,condition, heuristic: search(root,actions,condition, LocalHeuristic(heuristic))
 globalHeuristic = lambda root,actions,condition, heuristic: search(root,actions,condition, GlobalHeuristic(heuristic))
