@@ -1,7 +1,8 @@
 {
     "algorithm":"GH",
     "heuristic":"dist3D",
+    "initial_state": "wggrbryrwbwwoooygyobb",
     "max_depth": 3,
-    "graphics": false
+    "graphics": true
 
 }

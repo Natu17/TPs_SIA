@@ -1,6 +1,6 @@
 {
-    "algorithm":"GH",
-    "heuristic":"rookie",
+    "algorithm":"LH",
+    "heuristic":"manhattan",
     "initial_state":"wggrbryrwbwwoooygyobb",
     "graphics": true
 
