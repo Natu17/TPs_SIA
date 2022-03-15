@@ -1,0 +1,7 @@
+{
+    "algorithm":"A",
+    "heuristic":"manhattan",
+    "max_depth": 3,
+    "graphics": true
+
+}

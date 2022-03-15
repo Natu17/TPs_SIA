@@ -1,0 +1,7 @@
+{
+    "algorithm":"GH",
+    "heuristic":"rookie",
+    "max_depth": 5,
+    "graphics": true
+
+}

@@ -1,0 +1,7 @@
+{
+    "algorithm":"GH",
+    "heuristic":"dist3D",
+    "max_depth": 3,
+    "graphics": false
+
+}

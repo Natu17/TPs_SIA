@@ -1,0 +1,7 @@
+{
+    "algorithm":"LH",
+    "heuristic":"cubes",
+    "max_depth": 3,
+    "graphics": true
+
+}
