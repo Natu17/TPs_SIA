@@ -1,10 +1,9 @@
 {
     "algorithm":"GH",
-    "heuristic":"dist3D",
-    "initial_state":"oowybbbgwrrowbygwyorg",
+    "heuristic":"manhattan",
     "step": 2,
-    "limit": 5,
+    "limit": 2,
     "max_depth": 10,
-    "graphics": true
+    "graphics": false
 
 }

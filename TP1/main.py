@@ -1,12 +1,9 @@
 import rubik
+import heuristics
 import search
 import time
 import json
 import sys
-
-
-#rubik.depth()
-#exit()
 
 config_path = sys.argv[1] if len(sys.argv)>1 else "config.json"
 
@@ -21,7 +18,7 @@ config.setdefault("max_depth",5)
 config.setdefault("graphics", False)
 config.setdefault("initial_state",rubik.scramble(config["max_depth"])[0])
 
-heuristics = {"manhattan":rubik.manhattanDistance, "dist3D": rubik.dist3D, "rookie":rubik.heurRookie, "cubes":rubik.heurCubes}
+heuristics = {"manhattan":heuristics.manhattanDistance, "dist3D": heuristics.dist3D, "rookie":heuristics.heurRookie, "cubes":heuristics.heurCubes}
 
 
 initial_state = config.get("initial_state")
@@ -59,4 +56,4 @@ print("moves " + moves)
 print("Explored " + str(solve["explored"]))
 print("Border " + str(solve["border"]))
 print("time " + str(end - start))
-print("depth " + str(nodes.pop().depth))
+print("depth " + str(solve["depth"]))

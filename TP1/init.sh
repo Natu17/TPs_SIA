@@ -1,3 +1,3 @@
-sudo apt install graphviz
-sudo apt install pip
+apt install graphviz
+apt install pip
 pip install -r dependencies.txt
