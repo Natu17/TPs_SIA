@@ -1,5 +1,5 @@
 import math
-import random
+import population
 import argparse
 
 
@@ -21,29 +21,6 @@ dataset = [
     [(-3.9439, -0.7689, 4.8830), 1],
 ]
 
-
-class Individual:
-    def __init__(self, genotype):
-        self.genotype = genotype
-        self.W = (genotype[0:3])
-        self.w = ((genotype[3:6]), (genotype[6:9]))
-        self.w0 = (genotype[9:11])
-        self.fitness = 0
-    
-
-
-class GenotypeSupplier:
-    def __init__(self, size, start=0, end=1, seed=None):
-        self.start = start
-        self.end = end
-        self.size = size
-        if seed:
-            random.seed(seed)
-
-    def next(self):
-        return [random.uniform(self.start, self.end) for i in range(0, self.size)]
-
-
 def g(x):
     return math.e**x/(1+math.e**x)
 
@@ -62,14 +39,24 @@ def E(W, w, w0):
     return sum((OUT - F(W, w, w0, IN))**2 for (IN,OUT) in dataset)
 
 
-supplier = GenotypeSupplier(size=GENOTYPE_LEN,seed=RANDOM_SEED)
-population = []
-for i in range(0,P):
-    population.append(Individual(supplier.next()))
+def fitness(genotype):
+    W = (genotype[0:3])
+    w = ((genotype[3:6]), (genotype[6:9]))
+    w0 = (genotype[9:11])
+    return 1/E(W, w, w0)
 
 
-for individual in population:
-    individual.fitness = E(individual.W, individual.w, individual.w0)
-    print("{:.2f}".format(individual.fitness))
 
+def mutation(child):
+    return child
 
+def selection(population):
+    return population[0]
+
+def breed(parent1, parent2):
+    return (parent1.genotype,parent2.genotype)
+
+def stop_condition(generations):
+    return len(generations) > 100
+
+population.run(P, GENOTYPE_LEN, RANDOM_SEED, fitness, mutation, selection, breed, stop_condition)
