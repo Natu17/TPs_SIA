@@ -1,7 +1,4 @@
-from functools import reduce
 import random
-from main import fitness
-from population import create_population
 
 
 def direct(candidates):

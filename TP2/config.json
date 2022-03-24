@@ -1,0 +1,6 @@
+{
+    "parents_selection":"direct",
+    "selection": "direct",
+    "population": 1000,
+    "error":0.0001
+}
