@@ -29,3 +29,11 @@ def multiple_breed(genotype1,genotype2,n):
             p1 = p2
 
     return genotypes
+
+def uniform_breed(genotype1, genotype2):
+    genotypes = [[],[]]
+    for i in range(0,len(genotype1)):
+        index = random.randrange(0,2)
+        genotypes[index] += genotype1[i]
+        genotypes[1-index] += genotype2[i]
+    return genotypes
