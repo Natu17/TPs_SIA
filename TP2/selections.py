@@ -15,6 +15,17 @@ def roulette(candidates):
             return i
     return
 
+def rank(candidates):
+    l = len(candidates)
+    total_probability = l* (l + 1) / 2
+    result = random.randint(0,total_probability)
+    total_probability = 0
+    for i in range(0,l):
+        total_probability += l-i
+        if total_probability >= result:
+            return candidates[i]
+    return
+
 def set_winner(competitor1,competitor2):
     u = random.uniform(0.5,1)
     r = random.uniform(0,1)
@@ -33,7 +44,8 @@ def tournament(candidates):
     return winner
 
 
-    
-
-    
-
+candidates = ['a','b','c','d','e','f','g','h','i','j','k']
+for i in range(0, len(candidates)):
+    a = rank(candidates)
+    print(a)
+    candidates.remove(a)
