@@ -16,13 +16,8 @@ def roulette(candidates):
     return
 
 def set_winner(competitor1,competitor2):
-    print(competitor1)
-    print(competitor2)
     u = random.uniform(0.5,1)
-    print(u)
     r = random.uniform(0,1)
-    print("r:")
-    print(r)
     if r < u:
         if competitor1.fitness < competitor2.fitness : competitor1 = competitor2
     else:
