@@ -24,7 +24,8 @@ def rank(candidates):
         total_probability += l-i
         if total_probability >= result:
             return candidates[i]
-    return
+    return -1 #error
+
 
 def set_winner(competitor1,competitor2):
     u = random.uniform(0.5,1)
@@ -43,9 +44,9 @@ def tournament(candidates):
     winner = set_winner(competitor1,competitor2)
     return winner
 
-
-candidates = ['a','b','c','d','e','f','g','h','i','j','k']
-for i in range(0, len(candidates)):
-    a = rank(candidates)
-    print(a)
-    candidates.remove(a)
+def truncated(candidates,n):
+    if n < len(candidates):
+        winner = random.choice(candidates[0:len(candidates) - n])
+        return winner
+    else:
+        return -1 #error

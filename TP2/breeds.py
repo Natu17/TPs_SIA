@@ -27,8 +27,9 @@ def multiple_breed(genotype1,genotype2,n):
             genotypes[0] = genotypes[1]
             genotypes[1] = aux
             p1 = p2
-
-    return genotypes
+        return genotypes
+    else:
+        return -1 #error
 
 def uniform_breed(genotype1, genotype2):
     genotypes = [[],[]]
