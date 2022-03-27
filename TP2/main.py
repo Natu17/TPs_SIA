@@ -1,7 +1,6 @@
 import math
 import random
 from genetic_algorithm import GeneticAlgorithm
-import argparse
 import selections
 import breeds
 import sys
@@ -27,6 +26,9 @@ config.setdefault("selection","direct")
 config.setdefault("breeding","simple_breed")
 config.setdefault("N",10)
 config.setdefault("error",0.0001)
+config.setdefault("To",100)
+config.setdefault("Tc",1)
+config.setdefault("k",0.01)
 
 GENOTYPE_LEN = 11
 P = config.get("population")
@@ -34,12 +36,18 @@ RANDOM_SEED = config.get("seed")
 MUTATION_PROBABILITY = config.get("mutation")
 MUTATION_DEVIATION = config.get("deviation")
 
-breedings = {"simple_breed":breeds.simple_breed, "multiple_breed": lambda p1,p2: breeds.multiple_breed(p1,p2,config.get("N"))}
-selections = {"roulette":selections.roulette, "direct":selections.direct}
+_breedings = {"simple_breed":breeds.simple_breed, "multiple_breed": lambda p1,p2: breeds.multiple_breed(p1,p2,config.get("N"))}
+_selections = {"roulette":selections.roulette, "direct":selections.direct , "rank":selections.rank, "tournament":selections.tournament, "truncated":selections.truncated, "boltzmann":selections.boltzmann}
 
-breeding_function = breedings[config.get("breeding")]
-parent_selection_function = selections[config.get("parents_selection")]
-selection_function = selections[config.get("selection")]
+breeding_function = _breedings[config.get("breeding")]
+parent_selection_function = _selections[config.get("parents_selection")]
+selection_function = _selections[config.get("selection")]
+
+max_error = 10**(-config.get("error"))
+
+selections.To = config.get("To")
+selections.Tc = config.get("Tc")
+selections.k = config.get("k")
 
 if not RANDOM_SEED: RANDOM_SEED = time.time_ns()
 random.seed(RANDOM_SEED)
@@ -67,17 +75,21 @@ def F(W, w, w0, E):
 def E(W, w, w0):
     return sum((OUT - F(W, w, w0, IN))**2 for (IN,OUT) in dataset)
 
+MAX_FITNESS = 100
+DECAY = 1
 
-def fitness(genotype):
+def error(genotype):
     W = (genotype[0:3])
     w = ((genotype[3:6]), (genotype[6:9]))
     w0 = (genotype[9:11])
-    return 1/E(W, w, w0)
+    return E(W, w, w0)
 
+def fitness(genotype):
+    return MAX_FITNESS*math.exp(-DECAY*error(genotype))
 
 
 def stop_condition(generations):
-    return generations[-1].fitness > 1/config.get("error")
+    return error(generations[-1].population[0].genotype) < max_error
 
 algorithm = GeneticAlgorithm(fitness, breeding_function, parent_selection_function, selection_function, GENOTYPE_LEN, MUTATION_PROBABILITY, MUTATION_DEVIATION, P)
 
@@ -85,6 +97,7 @@ algorithm = GeneticAlgorithm(fitness, breeding_function, parent_selection_functi
 plt.figure("error graph")
 while True:
     generations = algorithm.next()
+    selections.t += 1
     if stop_condition(generations):
         break
     

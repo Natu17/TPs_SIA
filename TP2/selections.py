@@ -1,19 +1,23 @@
-import random
+import random, math
 
 def direct(candidates):
     return candidates[0]
 
 
-def roulette(candidates):
-    total_probability = sum(candidate.fitness for candidate in candidates)
+def roulette_base(scores):
+    total_probability = sum(scores)
     result = random.uniform(0,total_probability)
     total_probability = 0
-
-    for i in candidates:
-        total_probability += i.fitness
+    for i, score in enumerate(scores):
+        total_probability += score
         if total_probability >= result:
             return i
-    return
+    return -1
+
+def roulette(candidates):
+    
+    index = roulette_base([c.fitness for c in candidates])
+    return candidates[index]
 
 def rank(candidates):
     l = len(candidates)
@@ -50,3 +54,20 @@ def truncated(candidates,n):
         return winner
     else:
         return -1 #error
+
+
+Tc =0.5
+To = 1
+t = 0
+k=1
+
+def temperature():
+    return Tc + (To - Tc)*math.exp(-k*t)
+
+def boltzmann(candidates):
+    
+    T = temperature()
+
+    scores = [math.exp(c.fitness/T) for c in candidates]
+
+    return candidates[roulette_base(scores)]
