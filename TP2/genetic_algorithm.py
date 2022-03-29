@@ -26,7 +26,9 @@ class Generation:
 
     def add(self, individual):
         self.population.add(individual)
-        if individual.fitness > self.fitness: self.fitness = individual.fitness
+        if individual.fitness > self.fitness:
+            self.fitness = individual.fitness
+            self.genotype = individual.genotype
     
 
 @dataclass
@@ -39,6 +41,8 @@ class GeneticAlgorithm:
     mutation_probability: float = 0.01
     mutation_deviation: float = 0
     population_size: int = 100
+    range_start: float = 0
+    range_end: float = 1
 
     
     def __post_init__(self):
@@ -46,7 +50,7 @@ class GeneticAlgorithm:
 
 
     def create_initial_generation(self):
-        supplier = GenotypeSupplier(size=self.genotype_len)
+        supplier = GenotypeSupplier(size=self.genotype_len, start = self.range_start, end=self.range_end)
         generation = Generation()
         for i in range(0, self.population_size):
             genotype = supplier.next()

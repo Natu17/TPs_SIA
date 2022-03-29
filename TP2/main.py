@@ -31,6 +31,7 @@ config.setdefault("To", 100)
 config.setdefault("Tc", 1)
 config.setdefault("k", 0.01)
 config.setdefault("TRUNC_N", 10)
+config.setdefault("range", [0,1])
 
 GENOTYPE_LEN = 11
 P = config.get("population")
@@ -49,6 +50,7 @@ selection_function = _selections[config.get("selection")]
 
 max_error = 10**(-config.get("error"))
 max_generations = config.get("max_generations")
+population_range = config.get("range")
 
 selections.To = config.get("To")
 selections.Tc = config.get("Tc")
@@ -97,7 +99,8 @@ def error(genotype):
 
 
 def fitness(genotype):
-    return MAX_FITNESS*math.exp(-DECAY*error(genotype))
+    return 3-error(genotype)
+    #return MAX_FITNESS*math.exp(-DECAY*error(genotype))
 
 
 def stop_condition(generations):
@@ -107,7 +110,7 @@ def stop_condition(generations):
 def main():
 
     algorithm = GeneticAlgorithm(fitness, breeding_function, parent_selection_function,
-                                 selection_function, GENOTYPE_LEN, MUTATION_PROBABILITY, MUTATION_DEVIATION, P)
+                                 selection_function, GENOTYPE_LEN, MUTATION_PROBABILITY, MUTATION_DEVIATION, P, population_range[0], population_range[1])
 
     # plt.ion()
     plt.figure("error graph")
@@ -123,11 +126,11 @@ def main():
         plt.gca().set_xlabel("generations")
         plt.gca().set_ylabel("error")
         plt.grid()
-        # if len(generations)<40:
-        plt.plot([i for i in range(0, len(generations))], [
-                 1/generation.fitness for generation in generations])
-        # else:
-        #plt.plot([i for i in range(len(generations)-40,len(generations))], [1/generation.fitness for generation in generations[-40:]])
+        if len(generations)<40:
+            plt.plot([i for i in range(0, len(generations))], [
+                 error(generation.genotype) for generation in generations])
+        else:
+            plt.plot([i for i in range(len(generations)-40,len(generations))], [error(generation.genotype) for generation in generations[-40:]])
 
         plt.pause(0.01)
 
