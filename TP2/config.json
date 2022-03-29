@@ -1,10 +1,11 @@
 {
-    "parents_selection": "direct",
+    "parents_selection": "roulette",
     "selection": "direct",
     "population": 1000,
-    "seed": 1,
+    "seed":1,
     "To": 100,
     "Tc": 1,
     "k": 1,
-    "error": 100
+    "error": 100,
+    "max_generations":50
 }

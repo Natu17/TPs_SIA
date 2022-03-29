@@ -5,14 +5,16 @@ def direct(candidates):
 
 
 def roulette_base(scores):
-    total_probability = sum(scores)
-    result = random.uniform(0,total_probability)
-    total_probability = 0
-    for i, score in enumerate(scores):
-        total_probability += score
-        if total_probability >= result:
-            return i
-    return -1
+    return random.choices(range(0,len(scores)),weights=scores,k=1)[0]
+    
+    # sum_scores = sum(scores)
+    # choice = random.uniform(0,sum_scores)
+    # cumulative_score = 0
+    # for i, score in enumerate(scores):
+    #     cumulative_score += score
+    #     if cumulative_score >= choice:
+    #         return i
+    # return -1
 
 def roulette(candidates):
     
@@ -21,14 +23,8 @@ def roulette(candidates):
 
 def rank(candidates):
     l = len(candidates)
-    total_probability = l* (l + 1) / 2
-    result = random.randint(0,total_probability)
-    total_probability = 0
-    for i in range(0,l):
-        total_probability += l-i
-        if total_probability >= result:
-            return candidates[i]
-    return -1 #error
+    return candidates[roulette_base([l-i for i in range(0,l)])]
+    
 
 
 def set_winner(competitor1,competitor2):
@@ -48,9 +44,11 @@ def tournament(candidates):
     winner = set_winner(competitor1,competitor2)
     return winner
 
-def truncated(candidates,n):
-    if n < len(candidates):
-        winner = random.choice(candidates[0:len(candidates) - n])
+TRUNC_N = 10 
+
+def truncated(candidates):
+    if TRUNC_N < len(candidates):
+        winner = random.choice(candidates[0:len(candidates) - TRUNC_N])
         return winner
     else:
         return -1 #error
