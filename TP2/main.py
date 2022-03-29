@@ -31,7 +31,7 @@ config.setdefault("To", 100)
 config.setdefault("Tc", 1)
 config.setdefault("k", 0.01)
 config.setdefault("TRUNC_N", 10)
-config.setdefault("range", [0,1])
+config.setdefault("range", [0, 1])
 
 GENOTYPE_LEN = 11
 P = config.get("population")
@@ -70,7 +70,10 @@ dataset = [
 
 
 def g(x):
-    return math.e**x/(1+math.e**x)
+    try:
+        return math.e**x/(1+math.e**x)
+    except OverflowError:
+        return 1
 
 
 def F(W, w, w0, E):
@@ -87,10 +90,6 @@ def E(W, w, w0):
     return sum((OUT - F(W, w, w0, IN))**2 for (IN, OUT) in dataset)
 
 
-MAX_FITNESS = 100
-DECAY = 1
-
-
 def error(genotype):
     W = (genotype[0:3])
     w = ((genotype[3:6]), (genotype[6:9]))
@@ -100,7 +99,6 @@ def error(genotype):
 
 def fitness(genotype):
     return 3-error(genotype)
-    #return MAX_FITNESS*math.exp(-DECAY*error(genotype))
 
 
 def stop_condition(generations):
@@ -126,11 +124,12 @@ def main():
         plt.gca().set_xlabel("generations")
         plt.gca().set_ylabel("error")
         plt.grid()
-        if len(generations)<40:
+        if len(generations) < 40:
             plt.plot([i for i in range(0, len(generations))], [
-                 error(generation.genotype) for generation in generations])
+                error(generation.genotype) for generation in generations])
         else:
-            plt.plot([i for i in range(len(generations)-40,len(generations))], [error(generation.genotype) for generation in generations[-40:]])
+            plt.plot([i for i in range(len(generations)-40, len(generations))],
+                     [error(generation.genotype) for generation in generations[-40:]])
 
         plt.pause(0.01)
 
