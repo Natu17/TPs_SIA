@@ -46,9 +46,9 @@ def tournament(candidates):
 
 TRUNC_N = 10 
 
-def truncated(candidates):
-    if TRUNC_N < len(candidates):
-        winner = random.choice(candidates[0:len(candidates) - TRUNC_N])
+def truncated(candidates, trunc = TRUNC_N):
+    if trunc < len(candidates):
+        winner = random.choice(candidates[0:len(candidates) - trunc])
         return winner
     else:
         return -1 #error
@@ -62,9 +62,9 @@ k=1
 def temperature():
     return Tc + (To - Tc)*math.exp(-k*t)
 
-def boltzmann(candidates):
+def boltzmann(candidates, tmp = temperature):
     
-    T = temperature()
+    T = tmp()
 
     scores = [math.exp(c.fitness/T) for c in candidates]
 
