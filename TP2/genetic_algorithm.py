@@ -1,7 +1,7 @@
 import random
 from sortedcontainers import SortedList
 from dataclasses import dataclass
-import selections
+
 
 @dataclass
 class Individual:
@@ -40,9 +40,11 @@ class GeneticAlgorithm:
     genotype_len: int
     mutation_probability: float = 0.01
     mutation_deviation: float = 0
+    mutation_one_only: bool = False
     population_size: int = 100
     range_start: float = 0
     range_end: float = 1
+    parents_replacement: bool = True
 
     
     def __post_init__(self):
@@ -63,16 +65,32 @@ class GeneticAlgorithm:
                 genotype[idx] += random.gauss(0,self.mutation_deviation)
         return genotype
 
+    def mutation_one(self,genotype):
+        idx = random.randint(0,len(genotype)-1)
+        if random.random() < self.mutation_probability:
+            genotype[idx] += random.gauss(0,self.mutation_deviation)
+        return genotype
+    
     def generate_children(self,generation):
         children = []
+        parents = generation.population.copy()
         while len(children) < self.population_size:
-            parent1 = self.parent_selection_function(generation.population)
-            parent2 = self.parent_selection_function(generation.population)
+            parent1 = self.parent_selection_function(parents)
+            print(parent1)
+            if not self.parents_replacement:
+                parents.remove(parent1)
+            parent2 = self.parent_selection_function(parents)
+            print(parent2)
+            if not self.parents_replacement:
+                parents.remove(parent2)
+
             childs = self.breeding_function(parent1.genotype,parent2.genotype)
             for child in childs:
-                genotype = self.mutation(child)
+                if self.mutation_one_only: 
+                    genotype = self.mutation_one(child)
+                else: 
+                    genotype = self.mutation(child)
                 children.append(Individual(genotype,self.fitness_fuction(genotype)))
-
         return children
 
     def next(self):
