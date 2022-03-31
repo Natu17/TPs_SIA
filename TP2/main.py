@@ -1,6 +1,7 @@
 import math
 import random
 from genetic_algorithm import GeneticAlgorithm
+import functions
 import selections
 import breeds
 import sys
@@ -8,6 +9,7 @@ import json
 import time
 import matplotlib.pyplot as plt
 import os
+import stops
 
 config_path = sys.argv[1] if len(sys.argv) > 1 else "config.json"
 
@@ -32,6 +34,7 @@ config.setdefault("Tc", 1)
 config.setdefault("k", 0.01)
 config.setdefault("TRUNC_N", 10)
 config.setdefault("range", [0, 1])
+config.setdefault("stop_condition","error")
 
 GENOTYPE_LEN = 11
 P = config.get("population")
@@ -43,13 +46,15 @@ _breedings = {"simple_breed": breeds.simple_breed, "multiple_breed": lambda p1,
               p2: breeds.multiple_breed(p1, p2, config.get("N"))}
 _selections = {"roulette": selections.roulette, "direct": selections.direct, "rank": selections.rank,
                "tournament": selections.tournament, "truncated": selections.truncated, "boltzmann": selections.boltzmann}
+_stop_conditions = {"error":stops.error_stop, "generation":stops.generation_stop}
 
 breeding_function = _breedings[config.get("breeding")]
 parent_selection_function = _selections[config.get("parents_selection")]
 selection_function = _selections[config.get("selection")]
+stop_condition = _stop_conditions[config.get("stop_condition")]
 
-max_error = 10**(-config.get("error"))
-max_generations = config.get("max_generations")
+stops.max_error = 10**(-config.get("error"))
+stops.max_generations = config.get("max_generations")
 population_range = config.get("range")
 
 selections.To = config.get("To")
@@ -58,56 +63,15 @@ selections.k = config.get("k")
 
 selections.TRUNC_N = config.get("TRUNC_N")
 
+
 if not RANDOM_SEED:
     RANDOM_SEED = time.time_ns()
 random.seed(RANDOM_SEED)
 
-dataset = [
-    [(4.4793, -4.075, -4.075), 0],
-    [(-4.1793, -4.9218, 1.7664), 1],
-    [(-3.9439, -0.7689, 4.8830), 1],
-]
-
-
-def g(x):
-    try:
-        return math.e**x/(1+math.e**x)
-    except OverflowError:
-        return 1
-
-
-def F(W, w, w0, E):
-    return g(sum(
-        W[j+1]*g(sum(
-            w[j][k]*E[k]
-            for k in range(0, 3)
-        ) - w0[j])
-        for j in range(0, 2)
-    ) - W[0])
-
-
-def E(W, w, w0):
-    return sum((OUT - F(W, w, w0, IN))**2 for (IN, OUT) in dataset)
-
-
-def error(genotype):
-    W = (genotype[0:3])
-    w = ((genotype[3:6]), (genotype[6:9]))
-    w0 = (genotype[9:11])
-    return E(W, w, w0)
-
-
-def fitness(genotype):
-    return 3-error(genotype)
-
-
-def stop_condition(generations):
-    return error(generations[-1].population[0].genotype) < max_error or len(generations) >= max_generations
-
 
 def main():
 
-    algorithm = GeneticAlgorithm(fitness, breeding_function, parent_selection_function,
+    algorithm = GeneticAlgorithm(functions.fitness, breeding_function, parent_selection_function,
                                  selection_function, GENOTYPE_LEN, MUTATION_PROBABILITY, MUTATION_DEVIATION, P, population_range[0], population_range[1])
 
     # plt.ion()
@@ -126,10 +90,10 @@ def main():
         plt.grid()
         if len(generations) < 40:
             plt.plot([i for i in range(0, len(generations))], [
-                error(generation.genotype) for generation in generations])
+                functions.error(generation.genotype) for generation in generations])
         else:
             plt.plot([i for i in range(len(generations)-40, len(generations))],
-                     [error(generation.genotype) for generation in generations[-40:]])
+                     [functions.error(generation.genotype) for generation in generations[-40:]])
 
         plt.pause(0.01)
 
