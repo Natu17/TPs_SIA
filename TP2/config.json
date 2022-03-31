@@ -1,14 +1,14 @@
 {
     "parents_selection": "direct",
     "selection": "direct",
-    "population": 500,
-    "mutation":0.1,
+    "parents_replacement":true,
+    "population": 6,
+    "mutation":0,
     "deviation":1,
     "seed":1,
-    "To": 100,
-    "Tc": 1,
-    "k": 1,
-    "error": 100,
-    "max_generations":500,
-    "range": [-1, 1]
+    "stop_condition": "generation",
+    "range": [-1, 1],
+    "max_generations":2,
+    "limit_fitness":10,
+    "mutations" : "mutation"
 }

@@ -69,3 +69,7 @@ def boltzmann(candidates):
     scores = [math.exp(c.fitness/T) for c in candidates]
 
     return candidates[roulette_base(scores)]
+
+
+def random_selec(candidates):
+    return random.choice(candidates)
