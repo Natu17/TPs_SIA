@@ -5,16 +5,16 @@ def direct(candidates):
 
 
 def roulette_base(scores):
-    return random.choices(range(0,len(scores)),weights=scores,k=1)[0]
+    #return random.choices(range(0,len(scores)),weights=scores,k=1)[0]
     
-    # sum_scores = sum(scores)
-    # choice = random.uniform(0,sum_scores)
-    # cumulative_score = 0
-    # for i, score in enumerate(scores):
-    #     cumulative_score += score
-    #     if cumulative_score >= choice:
-    #         return i
-    # return -1
+    sum_scores = sum(scores)
+    choice = random.uniform(0,sum_scores)
+    cumulative_score = 0
+    for i, score in enumerate(scores):
+        cumulative_score += score
+        if cumulative_score >= choice:
+            return i
+    return -1
 
 def roulette(candidates):
     
@@ -60,13 +60,21 @@ t = 0
 k=1
 
 def temperature():
+    #print(Tc + (To - Tc)*math.exp(-k*t))
     return Tc + (To - Tc)*math.exp(-k*t)
+
+def f1(c,T):
+    try:
+        return math.exp(c.fitness/T)
+    except:
+        return math.inf
+
 
 def boltzmann(candidates, tmp = temperature):
     
     T = tmp()
-
-    scores = [math.exp(c.fitness/T) for c in candidates]
+    
+    scores = [f1(c,T) for c in candidates]
 
     return candidates[roulette_base(scores)]
 

@@ -1,6 +1,6 @@
 import math
 import random
-import genetic_algorithm 
+import genetic_algorithm
 import functions
 import selections
 import breeds
@@ -35,9 +35,9 @@ config.setdefault("Tc", 1)
 config.setdefault("k", 0.01)
 config.setdefault("TRUNC_N", 10)
 config.setdefault("range", [0, 1])
-config.setdefault("stop_condition","error")
-config.setdefault("parents_replacement",True)
-config.setdefault("limit_fitness",100)
+config.setdefault("stop_condition", "error")
+config.setdefault("parents_replacement", True)
+config.setdefault("limit_fitness", 100)
 
 GENOTYPE_LEN = 11
 P = config.get("population")
@@ -49,8 +49,9 @@ MUTATION_DEVIATION = config.get("deviation")
 _breedings = {"simple_breed": breeds.simple_breed, "multiple_breed": lambda p1,
               p2: breeds.multiple_breed(p1, p2, config.get("N"))}
 _selections = {"roulette": selections.roulette, "direct": selections.direct, "rank": selections.rank,
-               "tournament": selections.tournament, "truncated": selections.truncated, "boltzmann": selections.boltzmann}
-_stop_conditions = {"error":stops.error_stop, "generation":stops.generation_stop,"fitness":stops.fitness_stop}
+               "tournament": selections.tournament, "truncated": selections.truncated, "boltzmann": selections.boltzmann, "random": selections.random_selec}
+_stop_conditions = {"error": stops.error_stop,
+                    "generation": stops.generation_stop, "fitness": stops.fitness_stop}
 
 
 breeding_function = _breedings[config.get("breeding")]
@@ -79,7 +80,7 @@ random.seed(RANDOM_SEED)
 def main():
 
     algorithm = genetic_algorithm.GeneticAlgorithm(functions.fitness, breeding_function, parent_selection_function,
-                                 selection_function, GENOTYPE_LEN, MUTATION_PROBABILITY, MUTATION_DEVIATION,MUTATION_ONE, P, population_range[0], population_range[1],config.get("parents_replacement"))
+                                                   selection_function, GENOTYPE_LEN, MUTATION_PROBABILITY, MUTATION_DEVIATION, MUTATION_ONE, P, population_range[0], population_range[1], config.get("parents_replacement"))
 
     # plt.ion()
     plt.figure("error graph")
@@ -95,13 +96,17 @@ def main():
         plt.gca().set_xlabel("generations")
         plt.gca().set_ylabel("error")
         plt.grid()
-        if len(generations) < 40:
-            plt.plot([i for i in range(0, len(generations))], [
-                functions.error(generation.genotype) for generation in generations])
-        else:
-            plt.plot([i for i in range(len(generations)-40, len(generations))],
-                     [functions.error(generation.genotype) for generation in generations[-40:]])
+        plt.yscale("log")
+        # if len(generations) < 40:
+        #     plt.plot([i for i in range(0, len(generations))], [
+        #         functions.error(generation.genotype) for generation in generations])
+        # else:
+        #     plt.plot([i for i in range(len(generations)-40, len(generations))],
+        #              [functions.error(generation.genotype) for generation in generations[-40:]])
 
+        plt.plot([i for i in range(0, len(generations))], [
+            functions.error(generation.genotype) for generation in generations])
+        
         plt.pause(0.01)
 
     end = (time.time(), time.process_time())

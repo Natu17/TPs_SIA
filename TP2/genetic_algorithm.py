@@ -76,11 +76,9 @@ class GeneticAlgorithm:
         parents = generation.population.copy()
         while len(children) < self.population_size:
             parent1 = self.parent_selection_function(parents)
-            print(parent1)
             if not self.parents_replacement:
                 parents.remove(parent1)
             parent2 = self.parent_selection_function(parents)
-            print(parent2)
             if not self.parents_replacement:
                 parents.remove(parent2)
 

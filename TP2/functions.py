@@ -35,6 +35,14 @@ def error(genotype):
     return E(W, w, w0)
 
 
+import sys
+MAX = sys.maxsize
+DECAY = -math.log(1/MAX)
 def fitness(genotype):
-    return 3-error(genotype)
+    #return MAX*math.exp(-DECAY*error(genotype))
+    try:
+        return 1/(error(genotype))
+    except ZeroDivisionError:
+        return math.inf
+    #return len(dataset)-error(genotype)
 
