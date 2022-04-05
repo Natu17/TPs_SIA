@@ -8,7 +8,9 @@ def simple_breed(genotype1,genotype2):
     genotypeFinal2 = genotype2[0:p] + genotype1[p:len(genotype1)]
     return (genotypeFinal1, genotypeFinal2)
 
-def multiple_breed(genotype1,genotype2,n):
+n=2
+
+def multiple_breed(genotype1,genotype2):
     if n < len(genotype1): 
         points = SortedList()
         l = [ i for i in range(1,len(genotype1))]
@@ -35,6 +37,6 @@ def uniform_breed(genotype1, genotype2):
     genotypes = [[],[]]
     for i in range(0,len(genotype1)):
         index = random.randrange(0,2)
-        genotypes[index] += genotype1[i]
-        genotypes[1-index] += genotype2[i]
+        genotypes[index] += [genotype1[i]]
+        genotypes[1-index] += [genotype2[i]]
     return genotypes

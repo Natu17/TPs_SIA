@@ -1,18 +1,14 @@
 {
     "parents_selection": "random",
-    "selection": "truncated",
-    "Tc": 1.0,
-    "To":20,
-    "k":0.004,
-    "breed": "multiple",
-    "parents_replacement":false,
+    "selection": "direct",
+    "breeding": "uniform_breed",
+    "parents_replacement":true,
     "population": 100,
-    "mutation":0.1,
+    "mutation":0,
     "deviation":1,
     "seed":1,
-    "stop_condition": "generation",
-    "range": [-1, 1],
-    "max_generations":5000,
-    "error":1000000000000000000,
-    "mutations" : "mutation"
+    "stop_condition": "fitness",
+    "range": [0, 1],
+    "mutations" : "mutation",
+    "limit_fitness": 10
 }

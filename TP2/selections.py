@@ -46,9 +46,9 @@ def tournament(candidates):
 
 TRUNC_N = 10 
 
-def truncated(candidates, trunc = TRUNC_N):
-    if trunc < len(candidates):
-        winner = random.choice(candidates[0:len(candidates) - trunc])
+def truncated(candidates):
+    if TRUNC_N < len(candidates):
+        winner = random.choice(candidates[0:len(candidates) - TRUNC_N])
         return winner
     else:
         return -1 #error

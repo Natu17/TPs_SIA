@@ -46,8 +46,7 @@ MUTATION_PROBABILITY = config.get("mutation")
 MUTATION_ONE = config.get("mutations")
 MUTATION_DEVIATION = config.get("deviation")
 
-_breedings = {"simple_breed": breeds.simple_breed, "multiple_breed": lambda p1,
-              p2: breeds.multiple_breed(p1, p2, config.get("N"))}
+_breedings = {"simple_breed": breeds.simple_breed, "multiple_breed": breeds.multiple_breed,"uniform_breed":breeds.uniform_breed}
 _selections = {"roulette": selections.roulette, "direct": selections.direct, "rank": selections.rank,
                "tournament": selections.tournament, "truncated": selections.truncated, "boltzmann": selections.boltzmann, "random": selections.random_selec}
 _stop_conditions = {"error": stops.error_stop,
@@ -70,6 +69,8 @@ selections.Tc = config.get("Tc")
 selections.k = config.get("k")
 
 selections.TRUNC_N = config.get("TRUNC_N")
+
+breeds.n = config.get("N")
 
 
 if not RANDOM_SEED:

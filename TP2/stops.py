@@ -1,6 +1,6 @@
 import functions
 
-max_error = 10**(-2)
+max_error = 10**(-200)
 
 max_generations = 500
 
