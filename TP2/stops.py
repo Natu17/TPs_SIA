@@ -7,7 +7,7 @@ max_generations = 500
 limit_fitness = 100
 
 def error_stop(generations):
-    return functions.error(generations[-1].population[0].genotype) < max_error
+    return functions.error(generations[-1].population[0].genotype) <= max_error
 
 def generation_stop(generations):
     return len(generations) >= max_generations

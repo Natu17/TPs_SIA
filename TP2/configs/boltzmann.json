@@ -1,0 +1,14 @@
+{
+    "parent_selection":"random",
+    "selection":"boltzmann",
+    "stop_condition": "error",
+    "To" : 10,
+    "Tc": 0.1,
+    "k": 0.0077,
+    "error": 300,
+    "population": 100,
+    "mutation":0.5,
+    "deviation":10,
+    "seed": 2,
+    "range":[-10,10]
+}

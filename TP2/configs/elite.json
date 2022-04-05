@@ -1,0 +1,11 @@
+{
+    "parent_selection":"random",
+    "selection":"direct",
+    "stop_condition": "error",
+    "error": 300,
+    "population": 100,
+    "mutation":0.5,
+    "deviation":10,
+    "seed": 1,
+    "range":[-10,10]
+}

@@ -70,7 +70,7 @@ def k_calculator(generation, percentage):
     return math.log(percentage)/(1 - generation)
 
 #boltzmann tests
-def boltzmann_tests():
+def boltzmannTests():
     Tc = [0.1]
     To = [10]
     percentages = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]

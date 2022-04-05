@@ -1,0 +1,11 @@
+{
+    "parent_selection":"random",
+    "selection":"roulette",
+    "stop_condition": "error",
+    "error": 300,
+    "population": 100,
+    "mutation":0.5,
+    "deviation":10,
+    "seed": 3,
+    "range":[-10,10]
+}
