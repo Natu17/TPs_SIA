@@ -1,6 +1,8 @@
+import math
+from typing_extensions import Self
 import matplotlib.pyplot as plt
 import numpy as np
-
+import sympy as sp
 
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
@@ -45,13 +47,45 @@ class Network:
                 self.structure[i], self.structure[i+1]))
 
     def feedforward(self, input):
+        self.H = []
         input = np.array(input + [self.bias])
         for i in range(len(self.w)):
-            input = self.activation(np.dot(input, self.w[i]))
+            h = np.dot(input, self.w[i])
+            self.H.append(h)
+            input = self.activation(h)
         return input
+        
+
+    
+    
+    def retropropagation(self,data, output, n, lr):
+        lamda = []
+        x = sp.Symbol('x')
+        for i in range(len(data)):
+            lamda[i] = sp.diff(self.activation(self.H[i][n],x))*(data[i] - output[i])
+            delta = lr*lamda[i]*self.activation(self.H[i][n])
+            self.w[i][n] = self.w[i][n] + delta
+
+        for i in reversed(range(len(self.w)-1)):
+            aux = np.dot(lamda, self.w[i])
+            for j in range(len(lamda)):
+                lamda[j] = aux*sp.diff(self.activaiton(self.H[i][j],x))
+                delta = lr*lamda[j]*self.activaiton(self.H[i][j])
+                self.w[i][j] = self.w[i][j] + delta
+        
+
 
     def training(self, dataset, epochs=100, learning_rate=0.1):
-        pass
+        error = 1
+        while error > 0.001:
+            input = np.random.choice(dataset)
+            output = self.feedforward(input)
+            self.retropropagation(input,output,np.size(input),learning_rate)
+            error =  sum((math.dist(OUT,self.feedforward(IN))) )**2 for (IN,OUT) in dataset
+
+        
+        
+
 
 def plot():
     network = Network([2, 3, 1], 'sigmoid', seed=0)
