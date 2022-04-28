@@ -3,32 +3,54 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
+def tan_gen(args):
+    args.setdefault('b', 1)
+    b = args['b']
+
+    def activation(x):
+        return np.tanh(b*x)
+
+    def der(x):
+        return b*(1-np.tanh(b*x)**2)
+
+    return activation, der
+
+def sigmoid_gen(args):
+    args.setdefault('b', 1)
+    b = args['b']
+
+    def activation(x):
+        return 1/(1+np.exp(-b*x))
+    
+    def der(x):
+        return b*np.exp(-b*x)/(1+np.exp(-b*x))**2
+    
+    return activation, der
+
+def step_gen(args):
+    def activation(x):
+        return np.where(x > 0, 1, -1)
+
+    def der(x):
+        return np.ones(x.shape)
+
+    return activation, der
 
 
-def sigmoid_der(x):
-    return (np.exp(-x))/((1+np.exp(-x))**2)
+def lineal_gen(args):
+    args.setdefault('b', 1)
+    b = args['b']
+
+    def activation(x):
+        return b*x
+
+    def der(x):
+        return b*np.ones(x.shape)
+
+    return activation, der
 
 
-def step(x):
-    return np.where(x > 0, 1, 0)
-
-
-def step_der(x):
-    return np.ones(x.shape)
-
-
-def lineal(x):
-    return x
-
-
-def lineal_der(x):
-    return np.ones(x.shape)
-
-
-activations = {'sigmoid': (sigmoid, sigmoid_der), 'step': (
-    step, step_der), 'lineal': (lineal, lineal_der)}
+activations_gens = {'sigmoid':sigmoid_gen, 'step': step_gen, 'lineal': lineal_gen, 'tanh': tan_gen}
 
 
 class Network:
@@ -47,10 +69,10 @@ class Network:
 
     # mxn                    nx1                         mx1
 
-    def __init__(self, structure=[3, 1],  activation='sigmoid', seed=1):
+    def __init__(self, structure=[3, 1],  activation='sigmoid', seed=1, args={}):
         structure[0] += 1  # add bias
         self.structure = structure
-        self.activation, self.activation_der = activations.get(activation)
+        self.activation, self.activation_der = activations_gens.get(activation)(args)
 
         if seed != 0:
             self.rng = np.random.default_rng(seed)
@@ -86,56 +108,62 @@ class Network:
         l = self.activation_der(H[-1])*(expected - output)
         lambdas = [np.array(l).reshape(len(l), 1)]
 
-        #self.w[-1] += lr * lambdas.reshape(len(lambdas),1) * V[-2].reshape(1,len(V[-2]))
-
-        # for i in range(len(expected)):
-        #     lamda[i] = V[-1][i]*(expected[i] - output[i])
-        #     for k in range(len(H[i-1])):
-        #         delta = lr*lamda[i]*self.activation(H[i-1][k])
-        #         self.w[-1][i][k] = self.w[-1][i][k] + delta
-
-        # for layer,H in reversed(zip(self.w[1:-1],H[1:-1])):
         for i in range(len(self.w)-2, -1, -1):
             h = H[i+1]
             layer = self.w[i+1]
             gp = self.activation_der(h)
             lo = lambdas[-1]
-            l = gp*np.dot(lo.T,layer)
+            l = gp*np.dot(lo.T, layer)
             l = l.T
             lambdas.append(l)
 
+        deltas = []
         for i in range(len(self.w)):
             l = lambdas[-i-1]
             v = V[i]
-            self.w[i] += lr*l*v.reshape(1, len(v))
+            delta = lr*l*v.reshape(1, len(v))
+            deltas.append(delta)
 
-        # for i, layer in enumerate(reversed(self.w[:-1])):
-        #     lambdas = self.w[-i-1]*lambdas.reshape(len(lambdas),1)
-        #     lambdas = lambdas*self.activation_der(H[-2-i])
-        #     self.w[-i-2] += lr*lambdas.T * V[-3-i].reshape(1,len(V[-3-i]))
+        return deltas
 
-        # for i in range(len(self.w)-1, 0,-1):
-        #     aux = np.dot(self.w[i],lamda)
-        #     for j in range(len(self.w[i])):
-        #         lamda[j] = aux[j]*self.activation_der(H[i][j])
-        #         for k in range(len(H[i-1])):
-        #             delta = lr*lamda[j]*V[i-1][k]
-        #             self.w[i][j][k] = self.w[i][j][k] + delta
+    def error(self, dataset):
+        dataset = np.array(dataset, dtype=object)
+        expected = np.array([OUT for IN, OUT in dataset])
+        output = np.array([self.feedforward(IN) for IN, OUT in dataset])
+        return 0.5*np.sum(np.abs(expected - output)**2)
 
-    def train(self, dataset, epochs=100, learning_rate=0.1, callback=None):
+    def train(self, dataset, batch_size=1, target_error=0, epochs=math.inf, learning_rate=0.1, momentum=0, callback=None):
+        if(len(dataset) % batch_size != 0):
+            raise ValueError(
+                "The dataset size must be a multiple of the batch size")
         error = 1
         dataset = np.array(dataset, dtype=object)
-        while error > 0.1:
+        batches_len = len(dataset) // batch_size
 
-            for input,expected in dataset:
-                output, H = self.feedforward(input, with_exitations=True)
-                self.retropropagation(expected, H, learning_rate)
+        deltas_old = [0 for _ in range(len(self.w))]
 
-                expected = np.array([OUT for IN, OUT in dataset])
-                output = np.array([self.feedforward(IN) for IN, OUT in dataset])
-                error = 0.5*np.sum(np.abs(expected - output)**2)
-            print(error)
+        while error > target_error and epochs > 0:
+            epochs -= 1
+            batches = self.rng.choice(dataset, size=(
+                batches_len, batch_size), replace=False)
 
+            for batch in batches:
+
+                deltas = []
+
+                for input, expected in batch:
+                    output, H = self.feedforward(input, with_exitations=True)
+                    _deltas = self.retropropagation(expected, H, learning_rate)
+                    if deltas:
+                        deltas += _deltas
+                    else:
+                        deltas = _deltas
+
+                for i in range(len(self.w)):
+                    self.w[i] += deltas[i] + momentum*deltas_old[i]
+                    deltas_old = deltas
+
+            error = self.error(dataset)
             if callback is not None:
                 callback(self)
 
