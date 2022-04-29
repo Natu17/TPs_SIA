@@ -83,7 +83,7 @@ class Network:
     def randomize(self):
         self.w = []
         for i in range(len(self.structure) - 1):
-            self.w.append(self.rng.random((
+            self.w.append(self.rng.uniform(-1,1,(
                 self.structure[i+1], self.structure[i])))
 
     def feedforward(self, input, with_exitations=False):
@@ -163,9 +163,11 @@ class Network:
                     self.w[i] += deltas[i] + momentum*deltas_old[i]
                     deltas_old = deltas
 
+                if callback is not None:
+                    callback(self)
+
             error = self.error(dataset)
-            if callback is not None:
-                callback(self)
+
 
 
 def plot():
