@@ -70,7 +70,7 @@ class Network:
     # mxn                    nx1                         mx1
 
     def __init__(self, structure=[3, 1],  activation='sigmoid', seed=1, args={}):
-        structure[0] += 1  # add bias
+        #structure[0] += 1  # add bias
         self.structure = structure
         self.activation, self.activation_der = activations_gens.get(activation)(args)
 
@@ -84,26 +84,28 @@ class Network:
         self.w = []
         for i in range(len(self.structure) - 1):
             self.w.append(self.rng.uniform(-1,1,(
-                self.structure[i+1], self.structure[i])))
+                self.structure[i+1], self.structure[i]+1))) # +1 for the bias
 
-    def feedforward(self, input, with_exitations=False):
+    def feedforward(self, input, with_values=False):
         H = []
-        input = np.array(input + [self.bias])
-        H.append(input)
+        V = []
+
+        H.append(np.append(input,self.bias))
         for layer in self.w:
+            input = np.append(input,self.bias)
+            V.append(input)
             h = np.dot(layer, input)
             H.append(h)
             input = self.activation(h)
-        if with_exitations:
-            return input, H
+        
+        V.append(input)
+        if with_values:
+            return input, H, V
         return input
 
-    def retropropagation(self, expected, H, lr):
+    def retropropagation(self, expected, H, V, lr):
 
-        output = self.activation(H[-1])
-
-        V = [self.activation(h) for h in H]
-        V[0] = H[0]
+        output = V[-1]
 
         l = self.activation_der(H[-1])*(expected - output)
         lambdas = [np.array(l).reshape(len(l), 1)]
@@ -113,8 +115,10 @@ class Network:
             layer = self.w[i+1]
             gp = self.activation_der(h)
             lo = lambdas[-1]
-            l = gp*np.dot(lo.T, layer)
+            #gp = np.append(gp,1)
+            l = gp*np.dot(lo.T, np.delete(layer, -1, axis=1)) #remove bias weight
             l = l.T
+            #l = l[:-1]
             lambdas.append(l)
 
         deltas = []
@@ -133,6 +137,7 @@ class Network:
         return 0.5*np.sum(np.abs(expected - output)**2)
 
     def train(self, dataset, batch_size=1, target_error=0, epochs=math.inf, learning_rate=0.1, momentum=0, callback=None):
+        errors = []
         if(len(dataset) % batch_size != 0):
             raise ValueError(
                 "The dataset size must be a multiple of the batch size")
@@ -152,53 +157,31 @@ class Network:
                 deltas = []
 
                 for input, expected in batch:
-                    output, H = self.feedforward(input, with_exitations=True)
-                    _deltas = self.retropropagation(expected, H, learning_rate)
+                    output, H, V = self.feedforward(input, with_values=True)
+                    _deltas = self.retropropagation(expected, H, V, learning_rate)
                     if deltas:
                         deltas += _deltas
                     else:
                         deltas = _deltas
 
                 for i in range(len(self.w)):
-                    self.w[i] += deltas[i] + momentum*deltas_old[i]
-                    deltas_old = deltas
+                    deltas[i] += momentum*deltas_old[i]
+                    self.w[i] += deltas[i]
+
+                deltas_old = deltas
 
                 if callback is not None:
                     callback(self)
 
             error = self.error(dataset)
+            errors.append(error)
+        return errors
 
-
-
-def plot():
-    network = Network([2, 3, 1], 'sigmoid', seed=0)
-
-    x = np.linspace(-5, 5, 100)
-    y = np.linspace(-5, 5, 100)
-    sample = [[i, j] for i in x for j in y]
-    value = [network.feedforward(s)[0] for s in sample]
-
-    x = [s[0] for s in sample]
-    y = [s[1] for s in sample]
-    plt.scatter(x, y, c=value)
-    plt.show()
-
-
-def plot_line():
-    network = Network([2, 1], 'step', seed=0)
-    input = [1, 0]
-
-    m, a, c = network.w[0][0]
-
-    def line(x): return (m*x + c)/a
-    x = np.linspace(-1, 1, 100)
-    plt.plot(x, line(x))
-    plt.xlim(-1, 1)
-    plt.ylim(-1, 1)
-    plt.grid()
-    plt.show()
 
 
 if __name__ == '__main__':
-    plot_line()
-    # plot()
+    x = np.array([-1, 0, 1])
+    act,der = sigmoid_gen({})
+    print(x)
+    print(act(x))
+    print(der(x))

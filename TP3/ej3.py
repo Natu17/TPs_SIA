@@ -2,7 +2,9 @@ from network import Network
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.animation as animation
-import os
+from datasets import number_images
+
+
 
 
 def a():
@@ -61,5 +63,19 @@ def a():
 
     anim.save('output.mp4', writer='ffmpeg')
 
+
+def b():
+    dataset = []
+
+    for i, img in enumerate(number_images):
+        dataset.append((np.array(img).flatten(), [2*(i%2) - 1]))
+
+    network = Network(structure=([35, 3, 2, 1]), activation='tanh', seed=17, args={'b': 1})
+    network.train(dataset, learning_rate=0.1, epochs=100, momentum=0.9)
+
+
+
+
+
 if __name__ == "__main__":
-    a()
+    b()
