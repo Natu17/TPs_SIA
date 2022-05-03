@@ -134,7 +134,8 @@ class Network:
         dataset = np.array(dataset, dtype=object)
         expected = np.array([OUT for IN, OUT in dataset])
         output = np.array([self.feedforward(IN) for IN, OUT in dataset])
-        return 0.5*np.sum(np.abs(expected - output)**2)
+        dist = (expected - output)
+        return 0.5*np.sum(dist**2)
 
     def train(self, dataset, batch_size=1, target_error=0, epochs=math.inf, learning_rate=0.1, momentum=0, callback=None):
         errors = []
