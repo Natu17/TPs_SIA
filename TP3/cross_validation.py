@@ -1,2 +1,0 @@
-
-def cross_validation():
