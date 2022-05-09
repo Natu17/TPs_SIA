@@ -178,7 +178,10 @@ class Network:
             errors.append(error)
         return errors
 
-
+def softmax(vector):
+	e = np.exp(vector)
+	return e / e.sum()
+	
 
 if __name__ == '__main__':
     x = np.array([-1, 0, 1])

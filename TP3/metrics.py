@@ -3,7 +3,7 @@ from network import Network
 import copy
 
 
-def cross_validation(dataset, network_template, k, epochs, metric):
+def cross_validation(dataset, network_template, k, epochs, metric, lr = 0.1, m=0):
 
     if len(dataset) % k != 0:
         raise ValueError("dataset must be divisible by k")
@@ -21,20 +21,29 @@ def cross_validation(dataset, network_template, k, epochs, metric):
     end = n
     test = dataset[start: end]
     training = dataset[end:]
-    precision = (-1, -1)
-
+    r_test_prec = 0
+    r_training_set = 0
+    r_network = 0
+    r_test_set = 0
     while(end <= len(dataset)):
         network = copy.deepcopy(network_template)
-        network.train(training, epochs=epochs)
+        network.train(training, epochs=epochs, learning_rate=lr, momentum=m)
         p = metric(network, test)
-        if p >= precision[1]:
-            precision = (network, p)
+        if p >= r_test_prec:
+            r_test_prec = p
+            r_network = network
+            r_training_set = training
+            r_test_set = test
         start = end
         end += n
         test = dataset[start: end]
         training = dataset[:start] + dataset[end:]
-
-    return precision
+    r_training_prec = metric(r_network,r_training_set)
+    return (r_network,
+        r_test_prec,
+        r_training_prec,
+        r_test_set,
+        r_training_prec)
 
 
 def get_nearest_class(classes, value):
@@ -70,7 +79,9 @@ def accuracy(network, dataset, epsilon=0.1):
     good = 0
     bad = 0
     for i in range(len(dataset)):
-        if (network.error([dataset[i]]) <= epsilon):
+        expected = dataset[i][1][0]
+        o = network.feedforward(dataset[i][0])
+        if (np.abs(expected-o) <= epsilon):
             good += 1
         else:
             bad += 1

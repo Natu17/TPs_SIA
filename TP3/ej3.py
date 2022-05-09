@@ -1,4 +1,5 @@
 from network import Network
+import network as n
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.animation as animation
@@ -74,8 +75,16 @@ def b():
     network.train(dataset, learning_rate=0.1, epochs=100, momentum=0.9)
 
 
+def opc():
+    dataset = []
 
+    for i, img in enumerate(number_images):
+        dataset.append((np.array(img).flatten(), [2*(i%2) - 1]))
+
+    network = Network(structure=([35, 3, 2, 1]), activation='tanh', seed=17, args={'b': 1})
+    network.train(dataset, learning_rate=0.1, epochs=100, momentum=0.9)
+    print(n.softmax(np.array([network.feedforward(IN) for IN, OUT in dataset])))
 
 
 if __name__ == "__main__":
-    b()
+    opc()
