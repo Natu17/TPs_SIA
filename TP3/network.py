@@ -137,7 +137,7 @@ class Network:
         dist = (expected - output)
         return 0.5*np.sum(dist**2)
 
-    def train(self, dataset, batch_size=1, target_error=0, epochs=math.inf, learning_rate=0.1, momentum=0, callback=None):
+    def train(self, dataset, batch_size=1, target_error=0, epochs=math.inf, learning_rate=0.1, momentum=0, callback=None, epoch_callback=None):
         errors = []
         if(len(dataset) % batch_size != 0):
             raise ValueError(
@@ -173,6 +173,9 @@ class Network:
 
                 if callback is not None:
                     callback(self)
+
+            if epoch_callback is not None:
+                epoch_callback(self)
 
             error = self.error(dataset)
             errors.append(error)

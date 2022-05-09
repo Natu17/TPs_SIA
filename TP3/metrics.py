@@ -43,7 +43,7 @@ def cross_validation(dataset, network_template, k, epochs, metric, lr = 0.1, m=0
         r_test_prec,
         r_training_prec,
         r_test_set,
-        r_training_prec)
+        r_training_set)
 
 
 def get_nearest_class(classes, value):
