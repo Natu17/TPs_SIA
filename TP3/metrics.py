@@ -54,8 +54,8 @@ def confusion_matrix(classes, predicted, expected):
         TP = matrix[i][i]
         FN = np.sum(matrix[i]) - TP
         FP = np.sum(matrix[:, i]) - TP
-        p = TP/(TP + FP)
-        r = TP/(TP + FN)
+        p = TP/(TP + FP) if TP + FP != 0 else 0
+        r = TP/(TP + FN) if TP + FN != 0 else 0
         matrix[-1][i] = p*100
         matrix[i][-1] = r*100
 
