@@ -135,6 +135,7 @@ class Network:
         expected = np.array([OUT for IN, OUT in dataset])
         output = np.array([self.feedforward(IN) for IN, OUT in dataset])
         dist = (expected - output)
+        dist = np.linalg.norm(dist)
         return 0.5*np.sum(dist**2)
 
     def train(self, dataset, batch_size=1, target_error=0, epochs=math.inf, learning_rate=0.1, momentum=0, callback=None, epoch_callback=None):
