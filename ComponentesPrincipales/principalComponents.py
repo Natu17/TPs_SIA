@@ -37,6 +37,7 @@ plt.scatter(components[:,0], components[:,1])
 
 print(components)
 
+
 print(pca.explained_variance_ratio_)
 
 
