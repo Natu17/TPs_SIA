@@ -5,29 +5,36 @@ import math
 
 class Kohonen:
 
-    def __init__(self, dataset, k = 6, seed = 0, initial_n = 1):        
+    def __init__(self, dataset, k = 3, seed = 0, initial_n = 1):        
         if seed:
-            self.rng = np.random.RandomState(seed)
+            self.rng = np.random.default_rng(seed)
         else:
             self.rng = np.random.default_rng()
 
         self.weights = self.rng.choice (dataset, size=(k,k), replace=True)
-        self.initital_radius = k * k
+        self.initital_radius = k*k
         self.dataset = dataset
         self.iteration_number = 0
         self.initial_n = initial_n
         self.k = k
     
+    def predict(self,x):
+        distances = np.linalg.norm(self.weights - x, axis=2)
+        winner_pos = np.unravel_index(distances.argmin(), distances.shape)
+        return winner_pos, distances
 
     def iteration(self,x):
         self.iteration_number += 1
         radius = self.initital_radius / self.iteration_number if self.initital_radius > self.iteration_number else math.exp(self.initital_radius / self.iteration_number)
         n = self.initial_n/ (self.iteration_number)
-        distances = np.linalg.norm(self.weights - x, axis=2)
-        winner_pos = np.unravel_index(distances.argmin(), distances.shape)
-        
-        for i in range(self.k):
-            for j in range(self.k):
+        winner_pos, distances = self.predict(x)
+        i,j = winner_pos
+        ceil = int(radius)+1
+        row = list(filter(lambda x: x >= 0 and x < self.k, range(i-ceil,i+ceil)))
+        col = list(filter(lambda x: x >= 0 and x < self.k, range(j-ceil,j+ceil)))
+
+        for i in row:
+            for j in col:
                 pos = np.array([i,j])
                 distance = np.linalg.norm(winner_pos - pos)
                 if distance < radius:
@@ -64,12 +71,12 @@ if __name__ == "__main__":
 
     network.train(epochs=100)
 
-austria = variables[2]
+    austria = variables[2]
 
-v = np.linalg.norm(network.weights-austria, axis=2)
+    v = np.linalg.norm(network.weights-austria, axis=2)
 
-im = plt.imshow(v)
+    im = plt.imshow(v)
 
-plt.colorbar(im)
+    plt.colorbar(im)
 
-plt.show()
+    plt.show()
