@@ -5,14 +5,15 @@ import math
 
 class Kohonen:
 
-    def __init__(self, dataset, k = 3, seed = 0, initial_n = 1):        
+    def __init__(self, dataset, k = 3, seed = 0, initial_n = 1, initial_radius = 1):        
         if seed:
             self.rng = np.random.default_rng(seed)
         else:
             self.rng = np.random.default_rng()
 
         self.weights = self.rng.choice (dataset, size=(k,k), replace=True)
-        self.initital_radius = k*k
+        #self.weights = self.rng.uniform(low=-1, high=1, size=(k,k,dataset.shape[1]))
+        self.initital_radius = initial_radius
         self.dataset = dataset
         self.iteration_number = 0
         self.initial_n = initial_n
@@ -23,10 +24,12 @@ class Kohonen:
         winner_pos = np.unravel_index(distances.argmin(), distances.shape)
         return winner_pos, distances
 
-    def iteration(self,x):
+    def iteration(self,x, epochs):
         self.iteration_number += 1
-        radius = self.initital_radius / self.iteration_number if self.initital_radius > self.iteration_number else math.exp(self.initital_radius / self.iteration_number)
+        #radius = self.initital_radius / self.iteration_number if self.initital_radius > self.iteration_number else math.exp(self.initital_radius / self.iteration_number)
+        radius = self.initital_radius*np.exp(-self.iteration_number*np.log(self.initital_radius)/epochs)
         n = self.initial_n/ (self.iteration_number)
+        #n = self.initial_n*np.exp(-self.iteration_number/epochs)
         winner_pos, distances = self.predict(x)
         i,j = winner_pos
         ceil = int(radius)+1
@@ -49,7 +52,7 @@ class Kohonen:
             self.rng.shuffle(epoch_dataset)
 
             for x in epoch_dataset:
-                self.iteration(x)
+                self.iteration(x, epochs)
 
     
         
