@@ -43,7 +43,7 @@ class Kohonen:
                 if distance < radius:
                     self.weights[i,j] +=  n*(x-self.weights[i,j])
      
-    def train(self, epochs=0):
+    def train(self, epochs=0, callback = None):
         if not epochs:
             epochs = len(self.dataset[0])*500
 
@@ -53,6 +53,9 @@ class Kohonen:
 
             for x in epoch_dataset:
                 self.iteration(x, epochs)
+
+            if callback:
+                callback(self)
 
     
         
