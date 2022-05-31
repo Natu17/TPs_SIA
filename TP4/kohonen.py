@@ -29,7 +29,8 @@ class Kohonen:
         #radius = self.initital_radius / self.iteration_number if self.initital_radius > self.iteration_number else math.exp(self.initital_radius / self.iteration_number)
         radius = self.initital_radius*np.exp(-self.iteration_number*np.log(self.initital_radius)/epochs)
         #n = self.initial_n/ (self.iteration_number)
-        n = self.initial_n*np.exp(self.iteration_number*np.exp(1/100)/epochs)
+        n = self.initial_n*np.exp(self.iteration_number*np.log(0.01)/epochs)
+
         winner_pos, distances = self.predict(x)
         i,j = winner_pos
         ceil = int(radius)+1

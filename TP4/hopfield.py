@@ -8,14 +8,16 @@ def check_loop(arr, v):
             return True
     return False
 
+
 class Hopfield:
     def __init__(self):
         pass
 
     def train(self, patterns):
+                
         # Cada fila es una neurona, cada columna un peso
         self.weights = np.zeros((patterns.shape[1], patterns.shape[1]))
-
+        
         for i in range(len(self.weights)-1):
             for j in range(i+1, len(self.weights)):
 
@@ -26,14 +28,22 @@ class Hopfield:
 
                 self.weights[i, j] = self.weights[j, i] = sum/len(self.weights)
 
-
-    def predict(self, input):
+    def predict(self, input, callback=None):
         history = []
 
         while not check_loop(history, input):
             history.append(input)
-            input = np.dot(self.weights, input)
-            input[input > 0] = 1
-            input[input < 0] = -1
-        
+            if callback: callback(self,input)
+            product = np.dot(self.weights, input)
+            
+            input = np.array(input)
+            
+            for i in range(len(product)):
+                if product[i] > 0:
+                    input[i] = 1
+                if product[i] < 0:
+                    input[i] = -1
+
+            
+
         return input
