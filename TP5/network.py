@@ -54,9 +54,19 @@ def lineal_gen(args):
 
     return activation, der
 
+def relu_gen(args):
+    def activation(x):
+        return np.where(x > 0, x, 0)
+
+    def der(x):
+        return np.where(x > 0, 1, 0)
+
+    return activation, der
+    
+
 
 activations_gens = {'sigmoid': sigmoid_gen,
-                    'step': step_gen, 'lineal': lineal_gen, 'tanh': tan_gen}
+                    'step': step_gen, 'lineal': lineal_gen, 'tanh': tan_gen, 'relu': relu_gen}
 
 
 class Network:
@@ -165,6 +175,7 @@ class Network:
         planar = result.x
         self.reconstruct(planar)
 
+    
 
 if __name__ == '__main__':
     pass
