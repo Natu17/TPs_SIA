@@ -11,8 +11,9 @@ def main():
     font = f.f2
 
     dataset = np.array([x.flatten() for x in font])
-    dataset = dataset[0:10]
-    network = Network(structure=[35, 15, 2, 15, 35], activation="relu")
+    #dataset = dataset[0:10]
+    network = Network(structure=[35, 10, 2, 10, 35], activation=[
+                       "relu","lineal","relu", "sigmoid"], seed=17)
 
     iteration = 0
     tmp = time.time()
@@ -33,24 +34,31 @@ def main():
         network.reconstruct(x)
         errors.append(network.error(dataset))
         plt.plot(errors)
-        plt.yscale("log")
+        # plt.yscale("log")
         plt.pause(0.01)
 
     network.train(dataset, max_iter=1000, callback=callback)
 
-    # save network in network.pkl
+    #save network in network.pkl
     with open("weights.pkl", "wb") as file:
         pickle.dump(network.w, file)
 
-    print(network.error(dataset))
-    a = network.feedforward(dataset[1])
+    #load weights
+    # with open("weights1.pkl", "rb") as file:
+    #     network.w = pickle.load(file)
 
-    plt.figure("a")
-    plt.subplot(1, 2, 1)
-    plt.imshow(dataset[1].reshape(7, 5), cmap="binary")
-    plt.subplot(1, 2, 2)
-    plt.imshow(a.reshape(7, 5), cmap="binary")
-    plt.show()
+    print(network.error(dataset))
+
+    plt.figure("abc", figsize=(10, 100))
+
+    for i,letter in enumerate(dataset):
+        plt.subplot(len(dataset), 2, i*2+1)
+        plt.imshow(letter.reshape(7, 5), cmap="binary")
+        plt.subplot(len(dataset), 2, i*2+2)
+        letter = network.feedforward(letter)
+        plt.imshow(letter.reshape(7, 5), cmap="binary")
+    plt.savefig("abc.svg")
+    #plt.show()
 
 
 if __name__ == '__main__':

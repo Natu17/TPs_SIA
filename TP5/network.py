@@ -2,8 +2,6 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import optimize
-# import tensorflow as tf
-# from tensorflow.keras.optimizers import Adam
 
 
 def tan_gen(args):
@@ -13,10 +11,7 @@ def tan_gen(args):
     def activation(x):
         return np.tanh(b*x)
 
-    def der(x):
-        return b*(1-np.tanh(b*x)**2)
-
-    return activation, der
+    return activation
 
 
 def sigmoid_gen(args):
@@ -26,20 +21,14 @@ def sigmoid_gen(args):
     def activation(x):
         return 1/(1+np.exp(-b*x))
 
-    def der(x):
-        return b*np.exp(-b*x)/(1+np.exp(-b*x))**2
-
-    return activation, der
+    return activation
 
 
 def step_gen(args):
     def activation(x):
         return np.where(x > 0, 1, -1)
 
-    def der(x):
-        return np.ones(x.shape)
-
-    return activation, der
+    return activation
 
 
 def lineal_gen(args):
@@ -49,19 +38,13 @@ def lineal_gen(args):
     def activation(x):
         return b*x
 
-    def der(x):
-        return b*np.ones(x.shape)
-
-    return activation, der
+    return activation
 
 def relu_gen(args):
     def activation(x):
         return np.where(x > 0, x, 0)
 
-    def der(x):
-        return np.where(x > 0, 1, 0)
-
-    return activation, der
+    return activation
     
 
 
@@ -71,7 +54,7 @@ activations_gens = {'sigmoid': sigmoid_gen,
 
 class Network:
 
-    bias = 1
+    bias = 0.5
 
     # W[i][j][k] layer i, neuron j, weight k
 
@@ -85,11 +68,13 @@ class Network:
 
     # mxn                    nx1                         mx1
 
-    def __init__(self, structure=[3, 1],  activation='sigmoid', seed=1, args={}):
+    def __init__(self, structure=[3, 1],  activation=None, seed=1, args={}):
         # structure[0] += 1  # add bias
         self.structure = structure
-        self.activation, self.activation_der = activations_gens.get(
-            activation)(args)
+        if not activation:
+            activation = ["sigmoid" for i in range(len(structure)-1)]
+
+        self.activation = [activations_gens[act](args) for act in activation]
 
         if seed != 0:
             self.rng = np.random.default_rng(seed)
@@ -101,7 +86,7 @@ class Network:
         self.w = []
         for i in range(len(self.structure) - 1):
             self.w.append(self.rng.uniform(-1, 1, (
-                self.structure[i+1], self.structure[i]+1)))  # +1 for the bias
+                self.structure[i+1], self.structure[i])))  # +1 for the bias
 
     def flatten(self):
         flat = []
@@ -131,10 +116,10 @@ class Network:
         if not end:
             end = len(self.structure)
 
-        for layer in self.w[start:end]:
-            input = np.append(input, self.bias)
+        for i,layer in enumerate(self.w[start:end]):
+            #input = np.append(input, self.bias)
             h = np.dot(layer, input)
-            input = self.activation(h)
+            input = self.activation[i+start](h)
 
         return input
 
@@ -147,31 +132,16 @@ class Network:
         return 0.5*np.sum(dist**2)
         #return np.mean(dist)
 
-    # def train(self, dataset, max_iter = math.inf, learning_rate = 0.1, beta1 = 0.9, beta2 = 0.999, epsilon = 1e-8):
-    #     opt = Adam(learning_rate=learning_rate, beta_1=beta1, beta_2=beta2, epsilon=epsilon)
-    #     this = self
-    #     variables = [tf.Variable(v) for v in self.flatten()]
-
-    #     def loss():
-    #         this.reconstruct(variables)
-    #         return this.error(dataset)
-    #     iter = 0
-    #     while(iter < max_iter):
-    #         opt.minimize(loss, variables)
-    #         iter+=1
-
-    #     self.reconstruct(variables)
-    #     return self
 
     def train(self, dataset,  learning_rate=0.1, max_iter=math.inf, callback=None):
         this = self
 
         def loss(flat):        
             this.reconstruct(flat)
-            return this.error(dataset)       
+            return this.error(dataset) + 0.1*np.max(flat**2)       
 
         result = optimize.minimize(loss, np.array(
-            self.flatten()), method='CG', callback=callback, options={'maxiter': max_iter})
+            self.flatten()), method='Powell', callback=callback, options={'maxiter': max_iter})
         planar = result.x
         self.reconstruct(planar)
 
