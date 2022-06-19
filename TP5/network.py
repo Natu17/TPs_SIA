@@ -106,10 +106,10 @@ class Network:
         return self.w
 
     def encode(self, input):
-        return self.feedforward(input, end=len(self.structure)/2)
+        return self.feedforward(input, end=len(self.structure)//2)
 
     def decode(self, input):
-        return self.feedforward(input, start=len(self.structure)/2)
+        return self.feedforward(input, start=len(self.structure)//2)
 
     def feedforward(self, input, start=0, end=None):
 
@@ -124,8 +124,8 @@ class Network:
         return input
 
     def error(self, dataset):
-        expected = np.array([OUT for OUT in dataset])
-        output = np.array([self.feedforward(IN) for IN in dataset])
+        expected = np.array([OUT for IN, OUT in dataset])
+        output = np.array([self.feedforward(IN) for IN, OUT in dataset])
 
         dist = (expected - output)
         #dist = np.linalg.norm(dist, axis=1)
@@ -138,7 +138,7 @@ class Network:
 
         def loss(flat):        
             this.reconstruct(flat)
-            return this.error(dataset) + 0.1*np.max(flat**2)       
+            return this.error(dataset) #+ 0.1*np.max(flat**2)       
 
         result = optimize.minimize(loss, np.array(
             self.flatten()), method='Powell', callback=callback, options={'maxiter': max_iter})

@@ -3,3 +3,5 @@
 */.ipynb*
 *.png
 *.mp4
+*.pkl
+*.svg
