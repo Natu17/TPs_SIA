@@ -118,15 +118,15 @@ class Network:
 
         for i,layer in enumerate(self.w[start:end]):
             #input = np.append(input, self.bias)
-            h = np.dot(layer, input)
+            h = np.dot(input, layer.T)
             input = self.activation[i+start](h)
 
         return input
 
     def error(self, dataset):
         expected = np.array([OUT for IN, OUT in dataset])
-        output = np.array([self.feedforward(IN) for IN, OUT in dataset])
-
+        #output = np.array([self.feedforward(IN) for IN, OUT in dataset])
+        output = self.feedforward(np.array([IN for IN, OUT in dataset]))
         dist = (expected - output)
         #dist = np.linalg.norm(dist, axis=1)
         return 0.5*np.sum(dist**2)

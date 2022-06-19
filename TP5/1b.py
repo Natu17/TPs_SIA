@@ -11,14 +11,14 @@ def main():
     font = f.f2
     rng = np.random.RandomState(17)
     dataset = np.array([[x.flatten(), x.flatten()] for x in font])
-    dataset = dataset[0:10]
-    network = Network(structure=[35, 20, 2, 20, 35], activation=[
+    dataset = dataset[0:5]
+    network = Network(structure=[35, 10, 2, 10, 35], activation=[
                        "relu","lineal","relu", "sigmoid"], seed=17)
     noise = []
-    iters = 5
+    iters = 3
     for i in range(iters):
         for IN,OUT in dataset:
-            IN += rng.normal(0, 1, IN.shape)
+            IN += rng.normal(0, 0.1, IN.shape)
             noise.append([IN,OUT])
 
     iteration = 0
@@ -59,14 +59,14 @@ def main():
 
     plt.figure("abc", figsize=(10, 100))
 
-    for i,letter in enumerate(noise):
-        letter = letter[0]
-        expected = letter[1]
-        plt.subplot(len(noise), 2, i*3+1)
+    for i,row in enumerate(noise):
+        letter = row[0]
+        expected = row[1]
+        plt.subplot(len(noise), 3, i*3+1)
         plt.imshow(letter.reshape(7, 5), cmap="binary")
-        plt.subplot(len(noise), 2, i*3+2)
+        plt.subplot(len(noise), 3, i*3+2)
         plt.imshow(expected.reshape(7, 5), cmap="binary")
-        plt.subplot(len(noise), 2, i*3+3)
+        plt.subplot(len(noise), 3, i*3+3)
         letter = network.feedforward(letter)
         plt.imshow(letter.reshape(7, 5), cmap="binary")
     plt.savefig("abc.svg")
