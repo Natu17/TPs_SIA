@@ -18,8 +18,11 @@ def main():
     iters = 3
     for i in range(iters):
         for IN,OUT in dataset:
-            IN += rng.normal(0, 0.1, IN.shape)
-            noise.append([IN,OUT])
+
+            rand = rng.uniform(0, 1, IN.shape)
+            rand = np.where(rand < 0.1, 1, 0)
+            noise.append([np.abs(IN-rand),OUT])
+            
 
     iteration = 0
     tmp = time.time()
