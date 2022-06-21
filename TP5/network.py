@@ -138,7 +138,7 @@ class Network:
 
         def loss(flat):        
             this.reconstruct(flat)
-            return this.error(dataset) #+ 0.1*np.max(flat**2)       
+            return this.error(dataset) + 0.1*np.max(flat**2)       
 
         result = optimize.minimize(loss, np.array(
             self.flatten()), method='Powell', callback=callback, options={'maxiter': max_iter})

@@ -11,9 +11,8 @@ def main():
     font = f.f2
 
     dataset = np.array([[x.flatten(), x.flatten()] for x in font])
-    dataset = dataset[0:10]
-    network = Network(structure=[35, 20, 2, 20, 35], activation=[
-                       "relu","lineal","relu", "sigmoid"], seed=17)
+    network = Network(structure=[35, 20, 10, 2, 10, 20, 35], activation=[
+                       "relu","relu","lineal","relu","relu", "sigmoid"], seed=17)
 
     iteration = 0
     tmp = time.time()
@@ -37,17 +36,17 @@ def main():
         # plt.yscale("log")
         plt.pause(0.01)
 
-    # network.train(dataset, max_iter=100, callback=callback)
+    network.train(dataset, max_iter=700, callback=callback)
 
-    # plt.savefig("error.png")
+    plt.savefig("error.png")
 
-    # #save network in network.pkl
-    # with open("weights.pkl", "wb") as file:
-    #     pickle.dump(network.w, file)
+    #save network in network.pkl
+    with open("weights.pkl", "wb") as file:
+        pickle.dump(network.w, file)
 
     #load weights
-    with open("weights.pkl", "rb") as file:
-        network.w = pickle.load(file)
+    # with open("weights.pkl", "rb") as file:
+    #     network.w = pickle.load(file)
 
     print(network.error(dataset))
 

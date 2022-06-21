@@ -12,8 +12,8 @@ def main():
     rng = np.random.RandomState(17)
     dataset = np.array([[x.flatten(), x.flatten()] for x in font])
     dataset = dataset[0:5]
-    network = Network(structure=[35, 10, 2, 10, 35], activation=[
-                       "relu","lineal","relu", "sigmoid"], seed=17)
+    network = Network(structure=[35, 55, 35], activation=[
+                       "lineal", "sigmoid"], seed=17)
     noise = []
     iters = 3
     for i in range(iters):
