@@ -127,13 +127,14 @@ class Network:
         expected = np.array([OUT for IN, OUT in dataset])
         #output = np.array([self.feedforward(IN) for IN, OUT in dataset])
         output = self.feedforward(np.array([IN for IN, OUT in dataset]))
-        dist = (expected - output)
+        #dist = (expected - output)
         #dist = np.linalg.norm(dist, axis=1)
-        return 0.5*np.sum(dist**2)
+        #return 0.5*np.sum(dist**2)
         #return np.mean(dist)
+        return ((expected-output)**2).mean()
 
 
-    def train(self, dataset,  learning_rate=0.1, max_iter=math.inf, callback=None):
+    def train(self, dataset, method="Powell", max_iter=math.inf, tol = 1e-3, callback=None):
         this = self
 
         def loss(flat):        
@@ -141,7 +142,7 @@ class Network:
             return this.error(dataset) + 0.1*np.max(flat**2)       
 
         result = optimize.minimize(loss, np.array(
-            self.flatten()), method='Powell', callback=callback, options={'maxiter': max_iter})
+            self.flatten()), method=method, callback=callback, options={'maxiter': max_iter}, tol=tol)
         planar = result.x
         self.reconstruct(planar)
 

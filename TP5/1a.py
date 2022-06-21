@@ -33,7 +33,6 @@ def main():
         network.reconstruct(x)
         errors.append(network.error(dataset))
         plt.plot(errors)
-        # plt.yscale("log")
         plt.pause(0.01)
 
     network.train(dataset, max_iter=700, callback=callback)

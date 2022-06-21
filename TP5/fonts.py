@@ -35,6 +35,41 @@ font_1 = np.array([
     [0x0e, 0x11, 0x01, 0x02, 0x04, 0x00, 0x04]   # 0x3f, ?
 ])
 
+font1_labels = [
+    "space",
+    "!",
+    '"',
+    "#",
+    "$",
+    "%",
+    "&",
+    "'",
+    "(",
+    ")",
+    "*",
+    "+",
+    ",",
+    "-",
+    ".",
+    "/",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    ":",
+    ";",
+    "<",
+    "=",
+    ">",
+    "?",
+]
+
 font_2 = np.array([
     [0x0e, 0x11, 0x17, 0x15, 0x17, 0x10, 0x0f],   # 0x40, @
     [0x04, 0x0a, 0x11, 0x11, 0x1f, 0x11, 0x11],   # 0x41, A
@@ -69,6 +104,43 @@ font_2 = np.array([
     [0x04, 0x0a, 0x11, 0x00, 0x00, 0x00, 0x00],   # 0x5e, ^
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1f]   # 0x5f, _
 ])
+
+
+font2_labels = [
+    "@",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+    "[",
+    "\\",
+    "]",
+    "^",
+    "_",
+]
+
 
 font_3 = np.array([
     [0x04, 0x04, 0x02, 0x00, 0x00, 0x00, 0x00],   # 0x60, `
@@ -105,13 +177,49 @@ font_3 = np.array([
     [0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f, 0x1f]   # 0x7f, DEL
 ])
 
-#7x5 font
+font3_labels = [
+    "`",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+    "[",
+    "\\",
+    "]",
+    "^",
+    "_",
+]
+
+# 7x5 font
 def get_character(bitmap):
     matrix = np.zeros((7, 5))
     for i in range(7):
         for j in range(5):
             matrix[i][j] = (bitmap[i] >> (4-j)) & 0x01
     return matrix
+
 
 f1 = np.array([get_character(bitmap) for bitmap in font_1])
 f2 = np.array([get_character(bitmap) for bitmap in font_2])
